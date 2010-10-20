@@ -139,21 +139,21 @@
 (setq gnus-posting-styles
       '((".*"
          (name user-full-name)
-         (address "darcsis@gmail.com")
+         (address "tamgya@gmail.com")
          (signature-file mi-signature-file)
          (organization mi-organization)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 utf-8))))
 	("^cn\\..*"
          (name mi-chinese-nickname)
-         (address "darcsis@gmail.com")
+         (address "tamgya@gmail.com")
          (signature-file mi-signature-file)
          (organization mi-organization)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 gb2312 gb18030 utf-8))))
         ("^tw\\..*"
          (name mi-chinese-nickname)
-         (address "darcsis@gmail.com")
+         (address "tamgya@gmail.com")
          (signature-file mi-signature-file)
          (organization mi-organization)
          (eval (setq mm-coding-system-priorities
@@ -166,7 +166,7 @@
 		     '(iso-8859-1 gb2312 gb18030 big5 utf-8))))
 	("^\\(\\(nnfolder\\)\\|\\(nnml\\)\\):.*mail\\..*"
 	 (name user-full-name)
-	 (address "darcsis@gmail.com")
+	 (address "tamgya@gmail.com")
 	 (signature-file mi-signature-file)
 	 (organization mi-organization)
 	 (eval (setq mm-coding-system-priorities
