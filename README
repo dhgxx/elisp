@@ -3,3 +3,8 @@ And its mainly use is to keep my elisp snippets in
 sync.
 
 elisp: emacs configuration files for Mecuria and Pluton.
+
+branches:
+    mercuria - mercuria is OpenBSD i386 but now offline.
+    pluton - my amd64 desktop.
+    mars - my i386 desktop.

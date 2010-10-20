@@ -8,7 +8,7 @@
 
 ;; test wether it is under xwindow
 (if (string-match "x" (prin1-to-string window-system))
-	(setq mi-use-xwindow 1)
+    (setq mi-use-xwindow 1)
   (setq mi-use-xwindow nil))
 
 ;; default configuration direcotry
@@ -23,10 +23,10 @@
   (setq mi-startup-el-files (cdr mi-startup-el-files))
   (setq startup-el-file-bytecoded (concat startup-el-file "c"))
   (setq startup-elc-file (concat (concat mi-default-conf-dir
-										 (file-name-nondirectory startup-el-file)) "c"))
+					 (file-name-nondirectory startup-el-file)) "c"))
   (when (file-newer-than-file-p startup-el-file startup-elc-file)
-	(byte-compile-file startup-el-file)
-	(rename-file startup-el-file-bytecoded startup-elc-file t)))
+    (byte-compile-file startup-el-file)
+    (rename-file startup-el-file-bytecoded startup-elc-file t)))
 
 ;; at last, suck in the configurations.
 (mapc 'load-file mi-startup-elc-files)

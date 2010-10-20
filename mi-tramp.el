@@ -8,5 +8,5 @@
  tramp-remote-sh "/bin/ksh"
  tramp-backup-directory-alist '(("" . "~/.emacs.d/rescure/tramp"))
  tramp-default-method-alist '(("" "\\'dhg\\'" "ssh")
-			      ("" "\\'ftp\\'" "sftp")
-			      ("" "\\'root\\'" "sudo")))
+							  ("" "\\'ftp\\'" "sftp")
+							  ("" "\\'root\\'" "sudo")))

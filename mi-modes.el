@@ -32,7 +32,7 @@
 
 (setq completion-ignored-extensions;; Filename completion ignores these.
       (append completion-ignored-extensions 
-	      '(".CKP" ".u" ".press" ".imp" ".BAK")))
+			  '(".CKP" ".u" ".press" ".imp" ".BAK")))
 
 (put 'eval-expression 'disabled nil)
 

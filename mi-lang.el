@@ -20,12 +20,12 @@
 ;; Xwidow related
 (when mi-use-xwindow
   (setq font-encoding-alist
-	(append '(("UTF8"          (utf-8 . 0))
-		  ("GB2312"        (chinese-gb2312 . 0))
-		  ("HZ-GB-2312"    (chinese-gb2312 . 0))
-		  ("BIG5"          (chinese-big5 . 0))
-		  ("ISO-2022-CN"   (chinese-cns11643-1 . 0))
-		  ) font-encoding-alist)))
+		(append '(("UTF8"          (utf-8 . 0))
+				  ("GB2312"        (chinese-gb2312 . 0))
+				  ("HZ-GB-2312"    (chinese-gb2312 . 0))
+				  ("BIG5"          (chinese-big5 . 0))
+				  ("ISO-2022-CN"   (chinese-cns11643-1 . 0))
+				  ) font-encoding-alist)))
 ;  (create-fontset-from-fontset-spec
 ;   (concat
 ;    "-misc-fixed-medium-r-normal-*-16-*-*-*-*-*-fontset-chinese,"
@@ -42,7 +42,7 @@
 ;		(append '((font . "fontset-chinese"))
 ;				default-frame-alist)))
 
-;; emacs23 xft fonts
+; emacs23 xft fonts
 (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-11"))
 (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))
