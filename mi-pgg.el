@@ -7,8 +7,8 @@
  pgg-scheme 'gpg
  pgg-cache-passphrase t
  pgg-passphrase-cache-expiry 3600
- pgg-default-user-id "tamgya@gmail.com"
- pgg-gpg-user-id "tamgya@gmail.com")
+ pgg-default-user-id "darcsis@gmail.com"
+ pgg-gpg-user-id "darcsis@gmail.com")
 
 (global-set-key "\M-[" nil)
 (global-set-key "\M-[i" 'pgg-insert-key)

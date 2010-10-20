@@ -20,29 +20,29 @@
 ;; Xwidow related
 (when mi-use-xwindow
   (setq font-encoding-alist
-		(append '(("UTF8"          (utf-8 . 0))
-				  ("GB2312"        (chinese-gb2312 . 0))
-				  ("HZ-GB-2312"    (chinese-gb2312 . 0))
-				  ("BIG5"          (chinese-big5 . 0))
-				  ("ISO-2022-CN"   (chinese-cns11643-1 . 0))
-				  ) font-encoding-alist)))
-;  (create-fontset-from-fontset-spec
-;   (concat
-;    "-misc-fixed-medium-r-normal-*-16-*-*-*-*-*-fontset-chinese,"
-; 	"chinese-gb2312:-*-gb2312.1980-*,"
-;	"chinese-big5-1:-*-big5-1,"
-;	"chinese-big5-2:-*-big5-2,"
-;	"chinese-cns11643-1:-*-cns11643-1,"
-;	"chinese-cns11643-2:-*-cns11643-2,"
-;	"chinese-cns11643-3:-*-cns11643-3,"
-;	"ipa:-*-ipapannew-*-iso10646-*,"
-;	"utf-8:-*-iso10646-*"))
-;  (set-default-font "fontset-chinese")
-;  (setq default-frame-alist
-;		(append '((font . "fontset-chinese"))
-;				default-frame-alist)))
+	(append '(("UTF8"          (utf-8 . 0))
+		  ("GB2312"        (chinese-gb2312 . 0))
+		  ("HZ-GB-2312"    (chinese-gb2312 . 0))
+		  ("BIG5"          (chinese-big5 . 0))
+		  ("ISO-2022-CN"   (chinese-cns11643-1 . 0))
+		  ) font-encoding-alist)))
+;;  (create-fontset-from-fontset-spec
+;;   (concat
+;;    "-misc-fixed-medium-r-normal-*-16-*-*-*-*-*-fontset-chinese,"
+;; 	"chinese-gb2312:-*-gb2312.1980-*,"
+;;	"chinese-big5-1:-*-big5-1,"
+;;	"chinese-big5-2:-*-big5-2,"
+;;	"chinese-cns11643-1:-*-cns11643-1,"
+;;	"chinese-cns11643-2:-*-cns11643-2,"
+;;	"chinese-cns11643-3:-*-cns11643-3,"
+;;	"ipa:-*-ipapannew-*-iso10646-*,"
+;;	"utf-8:-*-iso10646-*"))
+;;  (set-default-font "fontset-chinese")
+;;  (setq default-frame-alist
+;;		(append '((font . "fontset-chinese"))
+;;				default-frame-alist)))
 
-; emacs23 xft fonts
+;; emacs23 xft fonts
 (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-11"))
 (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))

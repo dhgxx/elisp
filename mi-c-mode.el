@@ -11,8 +11,8 @@
 
 (defun mi-build-tab-stop-list (width)
   (let ((num-tab-stops (/ 80 width))
-		(counter 1)
-		(ls nil))
+	(counter 1)
+	(ls nil))
     (while (<= counter num-tab-stops)
       (setq ls (cons (* width counter) ls))
       (setq counter (1+ counter)))
