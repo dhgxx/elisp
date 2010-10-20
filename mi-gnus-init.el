@@ -99,7 +99,7 @@
 (setq
  gnus-group-line-format "%M%S%p%P%5y:%B%(%g%)%l %O\n"
  ;;gnus-summary-line-format ":%U%R %B %s %-70=|%3L|%-20,20n|%&user-date; \n")
- gnus-summary-line-format ":%U%R %B %s %-70=|%3L|%-20,20n|%d| \n")
+ gnus-summary-line-format ":%U%R %B %s %-80=|%3L|%-20,20n|%d| \n")
 
 ;; process ansi colors
 (autoload 'ansi-color-apply-on-region "ansi-color")
