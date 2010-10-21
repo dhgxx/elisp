@@ -194,37 +194,42 @@
 (ad-activate 'message-send)
 
 ;; local posting time
+(defcustom mi-fill-column 78 "Default length of a line."
+  :type 'number
+  :group 'mi-gnus)
+
 (defun mi-article-fill-long-lines ()
   "Fill long lines in article, if citations exist, fill as well as cite them."
   (goto-char (point-min))
   (search-forward-regexp "^Xref:[ ].*" (point-max) t)
   (set-buffer (current-buffer))
-  (setq current-line (line-number-at-pos (point))
+  (setq	current-line (line-number-at-pos (point))
 	max-lines (line-number-at-pos (point-max)))
   (while (<= current-line max-lines)
     (progn
+      (setq current-line-start 0
+	    current-line-end 0
+	    citation-prefix "")
       (beginning-of-line)
+      (setq current-line-start (point))
       (if (looking-at "\\([ ]*\\(>\\|:\\)+[ ]*\\)+")
+	  (setq citation-prefix (match-string 0)))
+      (end-of-line)
+      (setq current-line-end (point))
+      (if (< mi-fill-column (- current-line-end current-line-start))
 	  (progn
-	    (setq citation-prefix (match-string 0)
-		  current-line-start (point))
-	    (end-of-line)
-	    (setq current-line-end (point))
-	    (if (< fill-column (- current-line-end current-line-start))
+	    (move-to-column fill-column)
+	    (if (looking-at "[a-zA-Z0-9_]")
 		(progn
-		  (move-to-column fill-column)
-		  (if (looking-at "[a-zA-Z0-9_]")
-		      (progn
-			(backward-word)
-			(insert (concat "\n" citation-prefix)))
-		    (fill-region current-line-start current-line-end))))))
+		  (backward-word)
+		  (insert (concat "\n" citation-prefix))))))
       (forward-line 1)
       (setq current-line (+ 1 current-line)))))
 
 (add-hook 'gnus-article-prepare-hook
 	  'gnus-article-date-local)
 (add-hook 'gnus-article-prepare-hook
-	  'gnus-article-fill-long-lines)
+	  'mi-article-fill-long-lines)
 
 ;; MFT things
 (setq message-subscribed-regexps
@@ -285,7 +290,7 @@
 	message-yank-prefix "> "
 	message-yank-cited-prefix ">"
 	message-yank-empty-prefix ">"
-	message-cite-prefix-regexp "\\(\\(\\w\\|[_.]\\)+>+\\|[ ]*[]>|}]\\)+"))
+	message-cite-prefix-regexp "\\(\\([:word:]\\|[_.]\\)+>+\\|[ ]*[]>|}]\\)+"))
 
 (defun mi-message-citation-style-bbs ()
   "Citation prefix and regex for bbs"
@@ -293,11 +298,11 @@
   (setq sc-cite-blank-lines-p t
 	sc-preferred-header-style 1 ; use bbs style citation header
 	sc-citation-delimiter ":"
-	sc-citation-delimiter-regexp "\\([_.]\\|[:word:]\\)+[:]+"
+	sc-citation-delimiter-regexp "\\([:word:]\\|[_.]\\)+:+"
 	message-yank-prefix ": "
 	message-yank-cited-prefix ":"
 	message-yank-empty-prefix ":"
-	message-cite-prefix-regexp "\\(\\(\\w\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
+	message-cite-prefix-regexp "\\(\\([:word:]\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
 
 (defvar mi-is-or-not-newsgroup nil "To see whether or not we are in a newsgroup browsing.")
 (defun mi-message-citation-style ()
