@@ -194,10 +194,37 @@
 (ad-activate 'message-send)
 
 ;; local posting time
+(defun mi-article-fill-long-lines ()
+  "Fill long lines in article, if citations exist, fill as well as cite them."
+  (goto-char (point-min))
+  (search-forward-regexp "^Xref:[ ].*" (point-max) t)
+  (set-buffer (current-buffer))
+  (setq current-line (line-number-at-pos (point))
+	max-lines (line-number-at-pos (point-max)))
+  (while (<= current-line max-lines)
+    (progn
+      (beginning-of-line)
+      (if (looking-at "\\([ ]*\\(>\\|:\\)+[ ]*\\)+")
+	  (progn
+	    (setq citation-prefix (match-string 0)
+		  current-line-start (point))
+	    (end-of-line)
+	    (setq current-line-end (point))
+	    (if (< fill-column (- current-line-end current-line-start))
+		(progn
+		  (move-to-column fill-column)
+		  (if (looking-at "[a-zA-Z0-9_]")
+		      (progn
+			(backward-word)
+			(insert (concat "\n" citation-prefix)))
+		    (fill-region current-line-start current-line-end))))))
+      (forward-line 1)
+      (setq current-line (+ 1 current-line)))))
+
 (add-hook 'gnus-article-prepare-hook
 	  'gnus-article-date-local)
-;;(add-hook 'gnus-article-prepare-hook
-;;	  'gnus-article-fill-long-lines)
+(add-hook 'gnus-article-prepare-hook
+	  'gnus-article-fill-long-lines)
 
 ;; MFT things
 (setq message-subscribed-regexps
@@ -266,11 +293,11 @@
   (setq sc-cite-blank-lines-p t
 	sc-preferred-header-style 1 ; use bbs style citation header
 	sc-citation-delimiter ":"
-	sc-citation-delimiter-regexp "\\w+:+[ ]*"
+	sc-citation-delimiter-regexp "\\([_.]\\|[:word:]\\)+[:]+"
 	message-yank-prefix ": "
 	message-yank-cited-prefix ":"
 	message-yank-empty-prefix ":"
-	message-cite-prefix-regexp "\\(\\w+:+\\|[ ]*[]:+|}]\\)+"))
+	message-cite-prefix-regexp "\\(\\(\\w\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
 
 (defvar mi-is-or-not-newsgroup nil "To see whether or not we are in a newsgroup browsing.")
 (defun mi-message-citation-style ()
@@ -462,7 +489,7 @@
    ("mail.newsletters"
     "^From:\\(\\(.*\\)\\|\\(.*[Nn][Oo]-[Rr][Ee][Pp][Ll][Yy].*\\)\\)@.*\\(\\([Nn][Oo][Rr][Ee][Pp][Ll][Yy]\\)\\|\\([Mm][Aa][Ii][Ll]\\.[Cc][Oo][Mm][Mm][Uu][Nn][Ii][Cc][Aa][Tt][Ii][Oo][Nn][Ss]\\.[Ss][Uu][Nn]\\)\\|\\([Cc][Oo][Mm][Mm][Uu][Nn][Ii][Cc][Aa][Tt][Ii][Oo][Nn][Ss]2\\)\\|\\([Gg][Ee][Oo][Cc][Aa][Cc][Hh][Ii][Nn][Gg]\\)\\|\\([Aa][Pp][Pp][Ll][Ee]\\)\\|\\([Ee][Cc][Oo][Nn][Oo][Mm][Ii][Ss][Tt]\\)\\|\\([Ff][Rr][Ee][Ee][Ss][Oo][Tt][Ww][Aa][Rr][Ee][Mm][Aa][Gg][Aa][Zz][Ii][Nn][Ee]\\)\\|\\([Nn][Yy][Tt][Ii][Mm][Ee][Ss]\\)\\|\\([Pp][Hh][Oo][Rr][Oo][Nn][Ii][Xx]\\)\\|\\([Ss][Ll][Aa][Ss][Hh][Dd][Oo][Tt]\\)\\|\\([Oo][Ss][Nn][Ee][Ww][Ss]\\)\\|\\([Yy][Ee][Ee][Yy][Aa][Nn]\\)\\|\\([Zz][Ii][Kk][Ii]\\)\\|\\([Ss][Oo][Uu][Rr][Cc][Ee][Ff][Oo][Rr][Gg][Ee]\\)\\|\\([Mm][Yy][Ff][Oo][Nn][Tt][Ss]\\)\\)\\.\\(\\([Oo][Rr][Gg]\\)\\|\\([Cc][Oo][Mm]\\)\\|\\([Nn][Ee][Tt]\\)\\).*")
    ("mail.x11.ati"
-    "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*[Xx][Oo][Rr][Gg]-[Dd][Rr][Ii][Vv][Ee][Rr]-[Aa][Tt][Ii].*@[Ll][Ii][Ss][Tt][Ss]\\.[Xx]\\.[Oo][Rr][Gg].*")
+    "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):\\(.*[Xx][Oo][Rr][Gg]-[Dd][Rr][Ii][Vv][Ee][Rr]-[Aa][Tt][Ii].*\\|.*\\)@\\([Ll][Ii][Ss][Tt][Ss]\\.[Xx]\\|[Bb][Uu][Gg][Ss]\\.[Dd][Ee][Bb][Ii][Aa][Nn]\\)\\.[Oo][Rr][Gg].*")
    ("mail.x11.radeonhd"
     "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\|\\(Subject\\)\\):\\(\\(.*[Rr][Aa][Dd][Ee][Oo][Nn][Hh][Dd].*\\)\\|\\(.*[Rr][Aa][Dd][Ee][Oo][Nn][Hh][Dd].*@[Oo][Pp][Ee][Nn][Ss][Uu][Ss][Ee]\\.[Oo][Rr][Gg].*\\)\\)")
    ("mail.x11.nouveau"
