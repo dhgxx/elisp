@@ -194,10 +194,38 @@
 (ad-activate 'message-send)
 
 ;; local posting time
+(defun mi-article-fill-long-lines ()
+  "Fill long lines in article, if citations exist, fill as well as cite them."
+  (progn
+    (goto-char (point-min))
+    (search-forward-regexp "^Xref:[ ].*" (point-max) t))
+  (set-buffer (current-buffer))
+  (setq	current-line (line-number-at-pos (point))
+	max-lines (line-number-at-pos (point-max)))
+  (while (<= current-line max-lines)
+    (progn
+      (beginning-of-line)
+      (if (looking-at "\\([ ]*\\(>\\|:\\)+[ ]*\\)+")
+	  (progn
+	    (setq citation-prefix (match-string 0)
+		  current-line-start (point))
+	    (end-of-line)
+	    (setq current-line-end (point))
+	    (if (< fill-column (- current-line-end current-line-start))
+		(progn
+		  (move-to-column fill-column)
+		  (if (looking-at "[a-zA-Z0-9_]")
+		      (progn
+			(backward-word)`
+			(insert (concat "\n" citation-prefix)))
+		    (fill-region current-line-start current-line-end))))))
+      (forward-line 1)
+      (setq current-line (+ 1 current-line)))))
+
 (add-hook 'gnus-article-prepare-hook
 	  'gnus-article-date-local)
-;;(add-hook 'gnus-article-prepare-hook
-;;	  'gnus-article-fill-long-lines)
+(add-hook 'gnus-article-prepare-hook
+	  'mi-article-fill-long-lines)
 
 ;; MFT things
 (setq message-subscribed-regexps
@@ -266,12 +294,11 @@
   (setq sc-cite-blank-lines-p t
 	sc-preferred-header-style 1 ; use bbs style citation header
 	sc-citation-delimiter ":"
-	sc-citation-delimiter-regexp "\\w+:+[ ]*"
+	sc-citation-delimiter-regexp "\\([_.]\\|[:word:]\\)+[:]+"
 	message-yank-prefix ": "
 	message-yank-cited-prefix ":"
 	message-yank-empty-prefix ":"
 	message-cite-prefix-regexp "\\(\\(\\w\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
-
 (defvar mi-is-or-not-newsgroup nil "To see whether or not we are in a newsgroup browsing.")
 (defun mi-message-citation-style ()
   "We are replying to a BBS"
