@@ -270,7 +270,7 @@
 	message-yank-prefix ": "
 	message-yank-cited-prefix ":"
 	message-yank-empty-prefix ":"
-	message-cite-prefix-regexp "\\(\\w+:+\\|[ ]*[]:+|}]\\)+"))
+	message-cite-prefix-regexp "\\(\\(\\w\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
 
 (defvar mi-is-or-not-newsgroup nil "To see whether or not we are in a newsgroup browsing.")
 (defun mi-message-citation-style ()
