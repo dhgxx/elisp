@@ -194,38 +194,11 @@
 (ad-activate 'message-send)
 
 ;; local posting time
-(defun mi-article-fill-long-lines ()
-  "Fill long lines in article, if citations exist, fill as well as cite them."
-  (goto-char (point-min))
-  (search-forward-regexp "^Xref:[ ].*" (point-max) t)
-  (set-buffer (current-buffer))
-  (setq current-line (line-number-at-pos (point))
-    max-lines (line-number-at-pos (point-max)))
-  (while (<= current-line max-lines)
-    (progn
-      (setq current-line-start 0
-        current-line-end 0
-        citation-prefix "")
-      (beginning-of-line)
-      (setq current-line-start (point))
-      (if (looking-at "\\([ ]*\\(>\\|:\\)+[ ]*\\)+")
-      (setq citation-prefix (match-string 0)))
-      (end-of-line)
-      (setq current-line-end (point))
-      (if (< mi-fill-column (- current-line-end current-line-start))
-      (progn
-        (move-to-column fill-column)
-        (if (looking-at "[a-zA-Z0-9_]")
-        (progn
-          (backward-word)
-          (insert (concat "\n" citation-prefix))))))
-      (forward-line 1)
-      (setq current-line (+ 1 current-line)))))
 
 (add-hook 'gnus-article-prepare-hook
 	  'gnus-article-date-local)
-(add-hook 'gnus-article-prepare-hook
-	  'mi-article-fill-long-lines)
+;;(add-hook 'gnus-article-prepare-hook
+;;	  'gnus-article-fill-long-lines)
 
 ;; MFT things
 (setq message-subscribed-regexps
