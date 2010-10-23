@@ -5,10 +5,16 @@
 
 ;;; Code:
 
-(setq
- user-full-name "Denise H. G."
- user-login-name "dhg"
- user-mail-address "darcsis@gmail.com")
+
+(defcustom mi-message-user-full-name (user-full-name)
+  "User's full name, which defaults to user's full name from local system."
+  :type 'string
+  :group 'mi-user)
+
+(defcustom mi-message-user-mail-address "darcsis@gmail.com"
+  "User's default mail address."
+  :type 'string
+  :group 'mi-user)
 
 (provide 'mi-user)
 

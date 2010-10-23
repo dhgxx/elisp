@@ -15,7 +15,6 @@
 ;; common smtp configuration
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
-      user-full-name "Denise H. G."
       smtpmail-debug-info t
       smtpmail-debug-verb t)
 
@@ -32,8 +31,7 @@ Argument PASSWD password.
 Argument KEY key.
 Argument CERT certificate.
 Argument AUTH-FILE authentication file."
-  (setq user-mail-address "darcsis@gmail.com"
-	smtpmail-smtp-server "smtp.xbsd.name"
+  (setq smtpmail-smtp-server "smtp.xbsd.name"
 	smtpmail-default-smtp-server "smtp.xbsd.name"
 	smtpmail-smtp-service 25
 	starttls-gnutls-program "gnutls_cli"
@@ -72,12 +70,12 @@ Argument AUTH-FILE authentication file."
   (interactive)
   (setq
    subject-content (gnus-fetch-field "Subject")
-   cc-content (gnus-fetch-field "CC")
+   cc-content (gnus-fetch-field "Cc")
    gcc-content (gnus-fetch-field "Gcc")
    newsgroup-content (gnus-fetch-field "Newsgroups")
    envelope-content (or (gnus-fetch-field "To")
 			newsgroup-content))
-
+  
   (if (null envelope-content)
       (progn
 	(setq envelope-content
@@ -85,7 +83,7 @@ Argument AUTH-FILE authentication file."
 	(if (not (null envelope-content))
 	    (setq mi-header-to envelope-content)
 	  (setq mi-header-to nil))))
-
+  
   (if (null subject-content)
       (progn
 	(setq subject-content
@@ -94,19 +92,19 @@ Argument AUTH-FILE authentication file."
 	    (setq mi-header-subject
 		  (concat "\"" subject-content "\""))
 	  (setq mi-header-subject nil))))
-
+  
   (if (not (or cc-content newsgroup-content))
       (progn
 	(setq cc-content
-	      (read-from-minibuffer "CC: "))
+	      (read-from-minibuffer "Cc: "))
 	(if (equal 0 (string-width cc-content))
 	    (setq mi-header-cc nil)
 	  (progn
 	    (setq mi-header-cc (concat cc-content "\n"))))))
-
+  
   (if (string-equal "nnml:mail.sent.mail" gcc-content)
       (setq mi-header-bcc
-	    (concat "Bcc: " user-mail-address "\n"))
+	    (concat "Bcc: " mi-message-user-mail-address "\n"))
     (setq mi-header-bcc nil))
 
   (setq
@@ -118,29 +116,30 @@ Argument AUTH-FILE authentication file."
 	     ">.*" ""
 	     (replace-regexp-in-string ".*<" "" envelope-content)))
 	   "\n"))
-
+  
   (insert mi-header-envelope)
 
   (if (not (null mi-header-bcc))
       (insert mi-header-bcc))
-
+  
   (if (not (null mi-header-to))
       (progn
 	(goto-char (point-min))
 	(while (search-forward-regexp "^To: $" (point-max) t)
 	  (replace-match (concat "To: " mi-header-to)))))
-
+  
   (if (not (null mi-header-subject))
       (progn
 	(goto-char (point-min))
 	(while (search-forward-regexp "^Subject: $" (point-max) t)
 	  (replace-match (concat "Subject: " mi-header-subject)))))
-
+  
   (if (not (null mi-header-cc))
       (progn
-	(if (null (gnus-fetch-field "CC"))
+	(if (or (null (gnus-fetch-field "Cc"))
+		(eq "" (gnus-fetch-field "Cc"))
 	    (progn
-	      (insert (concat "\nCC: " mi-header-cc))
+	      (insert (concat "\nCc: " mi-header-cc))
 	      (goto-char (point-min))
 	      (delete-blank-lines)))))
 
@@ -149,7 +148,7 @@ Argument AUTH-FILE authentication file."
    mi-header-to nil
    mi-header-subject nil
    mi-header-cc nil
-   mi-header-bcc nil))
+   mi-header-bcc nil)))
 
 ;; hooks
 (add-hook 'message-header-setup-hook

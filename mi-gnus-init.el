@@ -126,32 +126,38 @@
 (setq mm-coding-system-priorities '(iso-8859-1 utf-8))
 
 ;; decide encoding according group names
-(defvar mi-organization "Pluto The Planet"
-  "My default organization name.")
-(defvar mi-signature-file "~/.signature-rotated"
-  "My default signature file name.")
-(defvar mi-chinese-nickname "dhg"
-  "My default Chinese nick name.")
+(defcustom mi-message-header-organization "Pluto The Planet"
+  "My default organization name."
+  :type 'string
+  :group 'mi-gnus)
+(defcustom mi-message-signature-file "~/.signature-rotated"
+  "My default signature file name."
+  :type 'string
+  :group 'mi-gnus)
+(defcustom mi-message-header-chinese-nickname "dhg"
+  "My default Chinese nick name."
+  :type 'string
+  :group 'mi-gnus)
 
 ;; defaults to using only utf-8
 (setq gnus-posting-styles
       '((".*"
-         (name user-full-name)
-         (address user-mail-address)
-         (signature-file mi-signature-file)
-         (organization mi-organization)
+         (name mi-message-user-full-name)
+         (address mi-message-user-mail-address)
+         (signature-file mi-message-signature-file)
+         (organization mi-message-header-organization)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 utf-8))))
         ("^cn\\..*"
-         (name mi-chinese-nickname)
+         (name mi-message-header-chinese-nickname)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 gb2312 utf-8))))
         ("^tw\\..*"
-         (name mi-chinese-nickname)
+         (name mi-message-header-chinese-nickname)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 big5 utf-8))))
 	("^\\(\\(nnfolder\\)\\|\\(nnml\\)\\):.*mail\\..*"
-         (name user-full-name)
+         (name mi-message-user-full-name)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 utf-8))))))
 
@@ -466,8 +472,10 @@
 (gnus-demon-add-handler 'gnus-demon-scan-news 10 t)
 
 ;; my own gnus defun's
-(defvar mi-gnus-default-article-number 200
-  "Default number of articles to fetch in Gnus")
+(defcustom mi-gnus-default-article-number 200
+  "Default number of articles to fetch in Gnus"
+  :type 'integer
+  :group 'mi-gnus)
 (defun mi-gnus-select-group ()
   "To fetch a pre-set number of articles from a group in Gnus.
 See `mi-gnus-default-article-number' for more information."

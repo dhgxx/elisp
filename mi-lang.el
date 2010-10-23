@@ -45,10 +45,11 @@
 ;				default-frame-alist)))
 
 ;; emacs23 xft fonts
-(add-to-list 'default-frame-alist '(font . "Droid Sans Mono-11"))
+(add-to-list 'default-frame-alist '(font . "Droid Sans Mono-12"))
 (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))
-(set-fontset-font "fontset-default" 'cyrillic-iso8859-5 '("Droid Sans Fallback" . "unicode-bmp"))
+(set-fontset-font "fontset-default" 'viscii '("Droid Sans Mono" . "unicode-bmp"))
+(set-fontset-font "fontset-default" 'cyrillic-iso8859-5 '("Droid Sans Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'chinese-gb2312 '("Droid Sans Fallback" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'chinese-gbk '("Droid Sans Fallback" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'gb18030 '("Droid Sans Fallback" . "unicode-bmp"))
