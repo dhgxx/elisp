@@ -17,11 +17,11 @@
 (setq
  gnus-select-method '(nntp "news.cn99.com")
  gnus-secondary-select-methods 
-      '((nnfolder "archive"
-                  (nnfolder-directory "~/emacs/gnus/archive/")
-                  (nnfolder-active-file "~/emacs/gnus/archive/ative")
-                  (nnfolder-newsgroups-file "~/emacs/gnus/archive/newsgroups")
-                  (nnfolder-get-new-mail nil))))
+ '((nnfolder "archive"
+	     (nnfolder-directory "~/emacs/gnus/archive/")
+	     (nnfolder-active-file "~/emacs/gnus/archive/ative")
+	     (nnfolder-newsgroups-file "~/emacs/gnus/archive/newsgroups")
+	     (nnfolder-get-new-mail nil))))
 
 ;; more news group
 (add-to-list 'gnus-secondary-select-methods
@@ -55,11 +55,6 @@
 						(6 . big5)
 						(7 . utf-8))
       gnus-newsgroup-ignored-charsets '(unknown-8bit x-unknown))
-
-;; coding alias
-;; maybe now we can handle gb18030 and gbk
-;;(define-coding-system-alias 'gb18030 'gb2312)
-;;(define-coding-system-alias 'gbk 'gb18030)
 
 ;; visual appearance
 ;;
@@ -185,8 +180,6 @@
 ;; local posting time
 (add-hook 'gnus-article-prepare-hook
 	  'gnus-article-date-local)
-;;(add-hook 'gnus-article-prepare-hook
-;;	  'gnus-article-fill-long-lines)
 
 ;; MFT things
 (setq message-subscribed-regexps
@@ -316,7 +309,7 @@
       (progn
 	(beginning-of-line)
 	(setq mi-signature-region-start (point))))
-
+  
   (progn
     (goto-char (point-max))
     (setq mi-signature-region-end (search-backward-regexp "^[-][-]+[ ]*$" (point-min) t)))
@@ -335,8 +328,6 @@
 	    (search-backward-regexp "^[-][-]+[ ]*" (point-min) t)))))
 
 ;; citation funcion
-(setq message-cite-function
-      'message-cite-original-without-signature)
 ;; blank lines should be cited, too
 (setq sc-cite-blank-lines-p t)
 ;; nesting citation
