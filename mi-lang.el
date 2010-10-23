@@ -23,9 +23,11 @@
 	(append '(("UTF8"          (utf-8 . 0))
 		  ("GB2312"        (chinese-gb2312 . 0))
 		  ("HZ-GB-2312"    (chinese-gb2312 . 0))
+		  ("GBK"           (chinese-gbk . 0))
+		  ("GB18030"       (gb18030 . 0))
 		  ("BIG5"          (chinese-big5 . 0))
-		  ("ISO-2022-CN"   (chinese-cns11643-1 . 0))
-		  ) font-encoding-alist)))
+		  ("ISO-2022-CN"   (chinese-cns11643-1 . 0)))
+		font-encoding-alist)))
 ;  (create-fontset-from-fontset-spec
 ;   (concat
 ;    "-misc-fixed-medium-r-normal-*-16-*-*-*-*-*-fontset-chinese,"
@@ -47,6 +49,7 @@
 (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'chinese-gb2312 '("Droid Sans Fallback" . "unicode-bmp"))
+(set-fontset-font "fontset-default" 'chinese-gbk '("Droid Sans Fallback" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'gb18030 '("Droid Sans Fallback" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'chinese-big5-1 '("Droid Sans Fallback" . "unicode-bmp"))
 (set-fontset-font "fontset-default" 'chinese-big5-2 '("Droid Sans Fallback" . "unicode-bmp"))

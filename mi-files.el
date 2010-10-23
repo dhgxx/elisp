@@ -11,4 +11,5 @@
       (insert "\n")))
   (goto-char point-current-position))
 
+(add-hook 'before-save-hook 'mi-update-time-stamp-for-file)
 (add-hook 'before-save-hook 'mi-file-save-with-eol)

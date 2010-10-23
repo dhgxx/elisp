@@ -1,4 +1,4 @@
-;; mi-gnus-init.el
+;; mi-gnus-init.el -- gnuf configuration
 
 ;; startup file
 (setq
@@ -43,25 +43,23 @@
 ;; coding system
 ;;
 ;; gnus default
-(setq
- gnus-default-charset 'utf-8
- gnus-group-name-charset-group-alist '((".*" . utf-8)
-				       ("^cn\\.*" . chinese-iso-8bit)
-				       ("^tw\\.*" . big5))
- gnus-summary-show-article-charset-alist
- '((1 . ascii)
-   (2 . iso-8859-1)
-   (3 . gb2312)
-   (4 . gb18030)
-   (5 . big5)
-   (6 . utf-8))
- gnus-newsgroup-ignored-charsets
- '(unknown-8bit x-unknown x-gbk))
+(setq gnus-default-charset 'utf-8
+      gnus-group-name-charset-group-alist '((".*" . utf-8)
+					    ("^cn\\..*" . chinese-iso-8bit)
+					    ("^tw\\..*" . big5))
+      gnus-summary-show-article-charset-alist '((1 . ascii)
+						(2 . iso-8859-1)
+						(3 . gb2312)
+						(4 . gbk)
+						(5 . gb18030)
+						(6 . big5)
+						(7 . utf-8))
+      gnus-newsgroup-ignored-charsets '(unknown-8bit x-unknown))
 
 ;; coding alias
-;; maybe now we can handle gb18030
+;; maybe now we can handle gb18030 and gbk
 ;;(define-coding-system-alias 'gb18030 'gb2312)
-(define-coding-system-alias 'gbk 'gb18030)
+;;(define-coding-system-alias 'gbk 'gb18030)
 
 ;; visual appearance
 ;;
@@ -118,19 +116,19 @@
 (setq rfc2047-allow-incomplete-encoded-text nil)
 (progn
   (add-to-list 'rfc2047-header-encoding-alist '("Subject"))
-  (add-to-list 'rfc2047-charset-encoding-alist '(gbk . B))
   (add-to-list 'rfc2047-charset-encoding-alist '(gb2312 . B))
+  (add-to-list 'rfc2047-charset-encoding-alist '(gbk . B))
   (add-to-list 'rfc2047-charset-encoding-alist '(gb18030 . B))
   (add-to-list 'rfc2047-charset-encoding-alist '(big5 . B))
   (add-to-list 'rfc2047-charset-encoding-alist '(utf-8 . B)))
 
 ;; encoding priorities
-(setq mm-coding-system-priorities '(iso-8859-1 gb2312 gb18030 big5 utf-8))
+(setq mm-coding-system-priorities '(iso-8859-1 utf-8))
 
 ;; decide encoding according group names
 (defvar mi-organization "Pluto The Planet"
   "My default organization name.")
-(defvar mi-signature-file "~/.signature"
+(defvar mi-signature-file "~/.signature-rotated"
   "My default signature file name.")
 (defvar mi-chinese-nickname "dhg"
   "My default Chinese nick name.")
@@ -139,38 +137,23 @@
 (setq gnus-posting-styles
       '((".*"
          (name user-full-name)
-         (address "darcsis@gmail.com")
+         (address user-mail-address)
          (signature-file mi-signature-file)
          (organization mi-organization)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 utf-8))))
-	("^cn\\..*"
+        ("^cn\\..*"
          (name mi-chinese-nickname)
-         (address "darcsis@gmail.com")
-         (signature-file mi-signature-file)
-         (organization mi-organization)
          (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 gb2312 gb18030 utf-8))))
+                     '(iso-8859-1 gb2312 utf-8))))
         ("^tw\\..*"
          (name mi-chinese-nickname)
-         (address "darcsis@gmail.com")
-         (signature-file mi-signature-file)
-         (organization mi-organization)
          (eval (setq mm-coding-system-priorities
                      '(iso-8859-1 big5 utf-8))))
-	(".*\\.bbs\\..*"
-	 (name mi-chinese-nickname)
-	 (signature-file "~/.signature-rotated")
-	 (organization-file mi-orgazation)
-	 (eval (setq mm-coding-system-priorities
-		     '(iso-8859-1 gb2312 gb18030 big5 utf-8))))
 	("^\\(\\(nnfolder\\)\\|\\(nnml\\)\\):.*mail\\..*"
-	 (name user-full-name)
-	 (address "darcsis@gmail.com")
-	 (signature-file mi-signature-file)
-	 (organization mi-organization)
-	 (eval (setq mm-coding-system-priorities
-		     '(iso-8859-1 gb2312 gb18303 big5 utf-8))))))
+         (name user-full-name)
+         (eval (setq mm-coding-system-priorities
+                     '(iso-8859-1 utf-8))))))
 
 ;; confirm sending mail to newsgroups
 (setq gnus-confirm-mail-reply-to-news t)
@@ -206,7 +189,7 @@
 ;; citation style
 (require 'supercite)
 
-(defvar mi-is-reply-to-bbs nil "Whether we are replying to a BBS")
+(defvar mi-message-reply-to-bbs-p nil "Whether we are replying to a BBS")
 (defvar mi-safe-time-val nil "Nil if date string is invalid")
 
 (defun mi-header-on-wrote ()
@@ -272,15 +255,15 @@
 	message-yank-empty-prefix ":"
 	message-cite-prefix-regexp "\\(\\([:word:]\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
 
-(defvar mi-is-or-not-newsgroup nil "To see whether or not we are in a newsgroup browsing.")
+(defvar mi-newsgroup-p nil "To see whether or not we are in a newsgroup browsing.")
 (defun mi-message-citation-style ()
   "We are replying to a BBS"
   (interactive)
-  (setq mi-is-or-not-newsgroup (gnus-fetch-field "Xref"))
-  (if (not (null (string-match ".*\\.[Bb][Bb][Ss]\\..*" mi-is-or-not-newsgroup)))
-      (setq mi-is-reply-to-bbs t))
+  (setq mi-newsgroup-p (gnus-fetch-field "Xref"))
+  (if (not (null (string-match ".*\\.[Bb][Bb][Ss]\\..*" mi-newsgroup-p)))
+      (setq mi-message-reply-to-bbs-p t))
   (save-excursion
-    (if mi-is-reply-to-bbs
+    (if mi-message-reply-to-bbs-p
 	(mi-message-citation-style-bbs)
       (mi-message-citation-style-normal))))
 
@@ -292,7 +275,7 @@
   (mi-citation-delete-signature)
   (mi-message-header-subject-rewrite)
   (mi-citation-ready-to-compose)
-  (setq mi-is-reply-to-bbs nil))
+  (setq mi-message-reply-to-bbs-p nil))
 
 (defvar mi-signature-current-line nil "Current working line within in signature region.")
 (defun mi-citation-ready-to-compose ()
