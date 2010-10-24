@@ -1,7 +1,7 @@
 ;; mi-lang.el
 
 ;; chinese encoding et al.
-(set-language-environment "UTF-8")
+(set-language-environment 'utf-8)
 (setq locale-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (setq x-select-enable-clipboard t)

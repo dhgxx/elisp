@@ -1,5 +1,7 @@
 ;; mi-gnus-init.el -- gnuf configuration
 
+(require 'supercite)
+
 ;; startup file
 (setq
  gnus-home-directory "~/emacs/gnus"
@@ -39,19 +41,39 @@
 ;; coding system
 ;;
 ;; gnus default
-(setq gnus-default-charset 'utf-8
-      gnus-group-name-charset-group-alist '((".*" . utf-8)
-					    ("^cn\\..*" . chinese-gb2312)
-					    ("^tw\\..*" . big5))
-      gnus-summary-show-article-charset-alist '((1 . utf-8)
-						(2 . ascii)
-						(3 . iso-8859-1)
-						(4 . gb2312)
-						(5 . gbk)
-						(6 . gb18030)
-						(7 . big5)
-						(8 . big5-hkscs))
-      gnus-newsgroup-ignored-charsets '(unknown-8bit x-unknown))
+(eval-after-load "gnus-group"
+  '(nconc
+    '(("^tw\\..*" . chinese-big5)
+      ("^cn\\..*" . chinese-iso-8bit))
+    gnus-group-name-charset-group-alist))
+
+(eval-after-load "gnus-sum"
+  '(progn
+     (nconc '((1 . us-ascii)
+	      (2 . iso-8859-1)
+	      (3 . gb2312)
+	      (4 . gbk)
+	      (5 . gb18030)
+	      (6 . big5)
+	      (7 . big5-hkscs)
+	      (8 . utf-8))
+	    gnus-summary-show-article-charset-alist)
+     (add-to-list 'gnus-newsgroup-variables 'mm-coding-system-priorities)
+     (setq gnus-parameters
+	   (nconc
+	    ;; Some charsets are just examples!
+	    '((".*"
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 gb2312 gbk gb18030 big5 big5-hkscs utf-8)))
+	      ("^tw\\..*"
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 big5 big5-hkscs)))
+	      ("^cn\\..*"
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 gb2312 gbk gb18030))))
+	    gnus-parameters))))
+
+(setq gnus-default-charset 'utf-8)
 
 ;; visual appearance
 ;;
@@ -101,20 +123,17 @@
 		   (ansi-color-apply-on-region (point) (point-max)))))))
 
 ;; use rfc2047
-(require 'rfc2047)
-(defalias 'mail-header-encode-parameter 'rfc2047-encode-parameter)
-(setq rfc2047-allow-incomplete-encoded-text nil)
-(progn
-  (add-to-list 'rfc2047-header-encoding-alist '("Subject"))
-  (add-to-list 'rfc2047-charset-encoding-alist '(gb2312 . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(gbk . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(gb18030 . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(big5 . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(big5-hkscs . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(unicode-bmp . B)))
+(eval-after-load "rfc2047"
+  '(progn
+     (defalias 'mail-header-encode-parameter 'rfc2047-encode-parameter)
+     (add-to-list 'rfc2047-header-encoding-alist '("Subject"))))
 
 ;; encoding priorities
-(setq mm-coding-system-priorities '(iso-8859-1 gb2312 gbk gb18030 big5 big5-hkscs utf-8))
+(eval-after-load "mm-decode"
+  '(progn
+     (add-to-list 'mm-body-charset-encoding-alist '(gb2312 . 8bit))
+     (add-to-list 'mm-body-charset-encoding-alist '(big5 . 8bit))
+     (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64) t)))
 
 ;; decide encoding according group names
 (defcustom mi-message-header-organization "Pluto The Planet"
@@ -136,22 +155,12 @@
          (name mi-message-user-full-name)
          (address mi-message-user-mail-address)
          (signature-file mi-message-signature-file)
-         (organization mi-message-header-organization)
-         (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 utf-8))))
-        ("^cn\\..*"
-         (name mi-message-header-chinese-nickname)
-         (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 gb2312))))
-        ("^tw\\..*"
-         (name mi-message-header-chinese-nickname)
-         (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 big5))))
-	("^mail\\..*"
-         (name mi-message-user-full-name)
-         (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 utf-8))))))
-
+         (organization mi-message-header-organization))
+        ("^tw\\."
+         (name mi-message-header-chinese-nickname))
+        ("^cn\\."
+         (name mi-message-header-chinese-nickname))))
+ 
 ;; confirm sending mail to newsgroups
 (setq gnus-confirm-mail-reply-to-news t)
 
@@ -182,8 +191,6 @@
       '("\\(\\(.*@[Oo][Pp][Ee][Nn][Ss][Uu][Ss][Ee]\\)\\|\\(.*@[Ff][Rr][Ee][Ee][Bb][Ss][Dd]\\)\\|\\(.*@[Oo][Pp][Ee][Nn][Ss][Oo][Ll][Aa][Rr][Ii][Ss]\\)\\|\\(.*@[Oo][Pp][Ee][Nn][Bb][Ss][Dd]\\)\\|\\(.*@[Ll][Ii][Ss][Tt][Ss]\\.[Ff][Rr][Ee][Ee][Dd][Ee][Ss][Kk][Tt][Oo][Pp]\\)\\|\\(.*@[Ll][Ii][Ss][Tt][Ss]\\.[Xx]\\)\\)\\.[Oo][Rr][Gg]"))
 
 ;; citation style
-(require 'supercite)
-
 (defvar mi-message-safe-time-val nil
   "Nil if date string is invalid")
 
@@ -251,13 +258,14 @@
 	message-cite-prefix-regexp "\\(\\([:word:]\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
 
 (defvar mi-message-bbs-p nil
-  "To see whether or not we are in a newsgroup browsing.")
+  "To see whether or not we are replying messages in a newsgroup")
 
 (defun mi-message-citation-style ()
   "We are replying to a BBS"
   (interactive)
-  (if (not
-       (null (string-match ".*\\.[Bb][Bb][Ss]\\..*" (gnus-fetch-field "Xref"))))
+  (if (and
+       (message-news-p)
+       (string-match ".*\\.[Bb][Bb][Ss]\\..*" (gnus-fetch-field "Xref")))
       (setq mi-message-bbs-p t))
   (save-excursion
     (if mi-message-bbs-p
