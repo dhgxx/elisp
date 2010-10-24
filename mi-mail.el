@@ -59,11 +59,11 @@ Argument AUTH-FILE authentication file."
 ;; mail envelopes
 ;;
 ;; initialize my own vars
-(defvar mi-header-to nil)
-(defvar mi-header-subject nil)
-(defvar mi-header-cc nil)
-(defvar mi-header-bcc nil)
-(defvar mi-header-envelope nil)
+(defvar mi-message-header-to nil)
+(defvar mi-message-header-subject nil)
+(defvar mi-message-header-cc nil)
+(defvar mi-message-header-bcc nil)
+(defvar mi-message-header-envelope nil)
 
 (defun mi-message-header-setup-hook ()
   "Set up mail headers before posting."
@@ -81,34 +81,34 @@ Argument AUTH-FILE authentication file."
 	(setq envelope-content
 	      (read-from-minibuffer "Send a mail to: "))
 	(if (not (null envelope-content))
-	    (setq mi-header-to envelope-content)
-	  (setq mi-header-to nil))))
+	    (setq mi-message-header-to envelope-content)
+	  (setq mi-message-header-to nil))))
   
   (if (null subject-content)
       (progn
 	(setq subject-content
 	      (read-from-minibuffer "Subject: "))
 	(if (not (null subject-content))
-	    (setq mi-header-subject
+	    (setq mi-message-header-subject
 		  (concat "\"" subject-content "\""))
-	  (setq mi-header-subject nil))))
+	  (setq mi-message-header-subject nil))))
   
   (if (not (or cc-content newsgroup-content))
       (progn
 	(setq cc-content
 	      (read-from-minibuffer "Cc: "))
 	(if (equal 0 (string-width cc-content))
-	    (setq mi-header-cc nil)
+	    (setq mi-message-header-cc nil)
 	  (progn
-	    (setq mi-header-cc (concat cc-content "\n"))))))
+	    (setq mi-message-header-cc (concat cc-content "\n"))))))
   
   (if (string-equal "nnml:mail.sent.mail" gcc-content)
-      (setq mi-header-bcc
+      (setq mi-message-header-bcc
 	    (concat "Bcc: " mi-message-user-mail-address "\n"))
-    (setq mi-header-bcc nil))
+    (setq mi-message-header-bcc nil))
 
   (setq
-   mi-header-envelope
+   mi-message-header-envelope
    (concat "X-Envelope-To: "
 	   (replace-regexp-in-string
 	    "\(.*\)" ""
@@ -117,38 +117,38 @@ Argument AUTH-FILE authentication file."
 	     (replace-regexp-in-string ".*<" "" envelope-content)))
 	   "\n"))
   
-  (insert mi-header-envelope)
+  (insert mi-message-header-envelope)
 
-  (if (not (null mi-header-bcc))
-      (insert mi-header-bcc))
+  (if (not (null mi-message-header-bcc))
+      (insert mi-message-header-bcc))
   
-  (if (not (null mi-header-to))
+  (if (not (null mi-message-header-to))
       (progn
 	(goto-char (point-min))
 	(while (search-forward-regexp "^To: $" (point-max) t)
-	  (replace-match (concat "To: " mi-header-to)))))
+	  (replace-match (concat "To: " mi-message-header-to)))))
   
-  (if (not (null mi-header-subject))
+  (if (not (null mi-message-header-subject))
       (progn
 	(goto-char (point-min))
 	(while (search-forward-regexp "^Subject: $" (point-max) t)
-	  (replace-match (concat "Subject: " mi-header-subject)))))
+	  (replace-match (concat "Subject: " mi-message-header-subject)))))
   
-  (if (not (null mi-header-cc))
+  (if (not (null mi-message-header-cc))
       (progn
 	(if (or (null (gnus-fetch-field "Cc"))
 		(eq "" (gnus-fetch-field "Cc"))
 	    (progn
-	      (insert (concat "\nCc: " mi-header-cc))
+	      (insert (concat "\nCc: " mi-message-header-cc))
 	      (goto-char (point-min))
 	      (delete-blank-lines)))))
 
   (setq
-   mi-header-envelope nil
-   mi-header-to nil
-   mi-header-subject nil
-   mi-header-cc nil
-   mi-header-bcc nil)))
+   mi-message-header-envelope nil
+   mi-message-header-to nil
+   mi-message-header-subject nil
+   mi-message-header-cc nil
+   mi-message-header-bcc nil)))
 
 ;; hooks
 (add-hook 'message-header-setup-hook

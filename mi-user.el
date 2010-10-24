@@ -16,6 +16,11 @@
   :type 'string
   :group 'mi-user)
 
+(defcustom mi-message-user-nickname (user-login-name)
+  "User's nickname, which defaults to user's login name."
+  :type 'string
+  :group 'mi-user)
+
 (provide 'mi-user)
 
 ;;; mi-user.el ends here
