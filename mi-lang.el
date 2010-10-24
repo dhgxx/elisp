@@ -19,6 +19,13 @@
 
 ;; emacs23 xft fonts
 (when mi-use-xwindow
+  (setq font-encoding-alist
+	(append '(("UTF-8" (utf-8 . 0))
+		  ("GB2312" (chinese-gb2312 . 0))
+		  ("GB18030" (chinese-gb18030 . 0))
+		  ("BIG5" (chinese-big5 . 0))
+		  ("ISO-2022-CN" (chinese-cns11643-1 . 0))
+		  ) font-encoding-alist))
   (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-12"))
   (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))
