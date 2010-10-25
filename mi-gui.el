@@ -1,8 +1,5 @@
 ;; mi-gui.el
 
-;; no startup message
-(setq inhibit-startup-message t)
-
 ;; visual appearance
 (tool-bar-mode 0)
 

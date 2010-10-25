@@ -1,7 +1,12 @@
 ;; dot.emacs.el
 
+;; no startup message
+;; changes since 23.2
+;;(setq inhibit-startup-message t)
+(setq inhibit-startup-screen t
+      initial-scratch-message nil)
+
 (setq
- gnus-inhibit-startup-message t
  gnus-init-file "~/emacs/elisp/mi-gnus-init.elc"
  gnus-directory "~/emacs/gnus")
 

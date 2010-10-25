@@ -1,4 +1,4 @@
-;; mi-gnus-init.el -- gnuf configuration
+;; mi-gnus-init.el -- gnus configuration
 
 (require 'supercite)
 
@@ -38,9 +38,10 @@
  gnus-save-newsrc-file nil
  gnus-read-newsrc-file nil)
 
-;; coding system
-;;
 ;; gnus default
+;; defaults to using only utf-8
+(setq gnus-default-charset 'utf-8)
+
 (eval-after-load "gnus-group"
   '(nconc
     '(("^tw\\..*" . chinese-big5)
@@ -63,17 +64,33 @@
 	   (nconc
 	    ;; Some charsets are just examples!
 	    '((".*"
+	       (posting-style
+		(name mi-message-user-full-name)
+		(address mi-message-user-mail-address)
+		(signature-file mi-message-signature-file)
+		(organization mi-message-header-organization))
 	       (mm-coding-system-priorities
 		'(us-ascii iso-8859-1 gb2312 gbk gb18030 big5 big5-hkscs utf-8)))
 	      ("^tw\\..*"
+	       (charset . chinese-big5)
+	       (posting-style
+		(name mi-message-user-full-name))
 	       (mm-coding-system-priorities
 		'(us-ascii iso-8859-1 big5 big5-hkscs)))
 	      ("^cn\\..*"
+	       (charset . chinese-iso-8bit)
+	       (posting-style
+		(name mi-message-user-full-name))
 	       (mm-coding-system-priorities
-		'(us-ascii iso-8859-1 gb2312 gbk gb18030))))
+		'(us-ascii iso-8859-1 gb2312 gbk gb18030)))
+	      ("^mailing\\..*"
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 utf-8)))
+	      ("^nnml:.*"
+	       (visible . t)
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 utf-8))))
 	    gnus-parameters))))
-
-(setq gnus-default-charset 'utf-8)
 
 ;; visual appearance
 ;;
@@ -149,18 +166,6 @@
   :type 'string
   :group 'mi-gnus)
 
-;; defaults to using only utf-8
-(setq gnus-posting-styles
-      '((".*"
-         (name mi-message-user-full-name)
-         (address mi-message-user-mail-address)
-         (signature-file mi-message-signature-file)
-         (organization mi-message-header-organization))
-        ("^tw\\."
-         (name mi-message-header-chinese-nickname))
-        ("^cn\\."
-         (name mi-message-header-chinese-nickname))))
- 
 ;; confirm sending mail to newsgroups
 (setq gnus-confirm-mail-reply-to-news t)
 
