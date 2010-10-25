@@ -15,15 +15,8 @@
  mail-source-directory message-directory)
 
 ;; gnus select method
-(setq gnus-select-method
-      '(nntp "news.cn99.com")
-      gnus-auto-expirable-newsgroups
-      (concat "mail\\.freebsd\\..*\\|"
-	      "mail.freedesktop\\..*\\|"
-	      "mail.opensolaris\\..*\\|"
-	      "mail\\.openbsd\\..*\\|"
-	      "mail\\.x11\\..*\\|"
-	      "mail\\.news.*")
+(setq gnus-select-method '(nntp "news.cn99.com")
+      gnus-auto-expirable-newsgroups "mail\\.freebsd\\..*\\|mail.freedesktop\\..*\\|mail.opensolaris\\..*\\|mail\\.openbsd\\..*\\|mail\\.x11\\..*\\|mail\\.news.*"
       gnus-secondary-select-methods
       (eval-after-load "gnus"
 	'(nconc '((nnml "")

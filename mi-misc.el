@@ -49,9 +49,9 @@
   (fill-region (point-min)
 	       (point-max)))
 
-(global-set-key "\C-cm" nil)
-(global-set-key "\C-cmt" 'mi-update-time-stamp)
-(global-set-key "\C-cmf" 'mi-update-time-stamp-for-file)
+(global-set-key "\C-ct" nil)
+(global-set-key "\C-ctt" 'mi-update-time-stamp)
+(global-set-key "\C-ctf" 'mi-update-time-stamp-for-file)
 
 (global-set-key "\C-cf" 'mi-fill-whole-buffer)
 
