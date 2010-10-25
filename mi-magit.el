@@ -2,7 +2,8 @@
 
 (require 'magit)
 
-(setq magit-repo-dirs '("~/repos/git"
+(setq magit-repo-dirs '("~/repos/codaset"
+			"~/repos/git"
 			"~/repos/github"))
 
 (global-set-key "\C-cm" nil)
