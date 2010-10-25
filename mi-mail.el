@@ -1,15 +1,15 @@
 ;;; mi-mail.el --- mail stuff
 
 ;;; Commentary:
-;; mail related stuff here.
-
-(require 'smtpmail)
-
 ;; compose & send mail with gnus-user-agent
-; even when we are not within gnus
+;; even when we are not within gnus
 
 ;;; Code:
 
+(require 'smtpmail)
+
+;; my own mail user agent message
+(setq gnus-user-agent '(emacs gnus type codename))
 (setq mail-user-agent 'gnus-user-agent)
 
 ;; common smtp configuration
@@ -18,9 +18,11 @@
       smtpmail-debug-info t
       smtpmail-debug-verb t)
 
+(eval-after-load "mi-user"
+  '(setq user-mail-address mi-message-user-mail-address))
+
 ;; pop3 configuration
 (setq mail-sources '((file :path "/var/mail/dhg")))
-	  
 
 (defun mi-message-smtpmail-tls (server port user passwd key cert auth-file)
   "Send mail using tls method.
@@ -31,10 +33,10 @@ Argument PASSWD password.
 Argument KEY key.
 Argument CERT certificate.
 Argument AUTH-FILE authentication file."
-  (setq smtpmail-smtp-server "smtp.xbsd.name"
+  (setq smtpmail-smtp-server server
 	smtpmail-default-smtp-server "smtp.xbsd.name"
-	smtpmail-smtp-service 25
-	starttls-gnutls-program "gnutls_cli"
+	smtpmail-smtp-service port
+	starttls-gnutls-program "gnutls-cli"
 	starttls-extra-arguments nil
 	smtpmail-auth-credentials auth-file
 	smtpmail-starttls-credentials (list (list server port user passwd key cert)))
@@ -67,7 +69,6 @@ Argument AUTH-FILE authentication file."
 
 (defun mi-message-header-setup-hook ()
   "Set up mail headers before posting."
-  (interactive)
   (setq
    subject-content (gnus-fetch-field "Subject")
    cc-content (gnus-fetch-field "Cc")
@@ -75,7 +76,6 @@ Argument AUTH-FILE authentication file."
    newsgroup-content (gnus-fetch-field "Newsgroups")
    envelope-content (or (gnus-fetch-field "To")
 			newsgroup-content))
-  
   (if (null envelope-content)
       (progn
 	(setq envelope-content
@@ -83,7 +83,7 @@ Argument AUTH-FILE authentication file."
 	(if (not (null envelope-content))
 	    (setq mi-message-header-to envelope-content)
 	  (setq mi-message-header-to nil))))
-  
+
   (if (null subject-content)
       (progn
 	(setq subject-content
@@ -92,16 +92,15 @@ Argument AUTH-FILE authentication file."
 	    (setq mi-message-header-subject
 		  (concat "\"" subject-content "\""))
 	  (setq mi-message-header-subject nil))))
-  
+
   (if (not (or cc-content newsgroup-content))
       (progn
 	(setq cc-content
 	      (read-from-minibuffer "Cc: "))
-	(if (equal 0 (string-width cc-content))
+	(if (= 0 (string-width cc-content))
 	    (setq mi-message-header-cc nil)
-	  (progn
-	    (setq mi-message-header-cc (concat cc-content "\n"))))))
-  
+	  (setq mi-message-header-cc cc-content))))
+
   (if (string-equal "nnml:mail.sent.mail" gcc-content)
       (setq mi-message-header-bcc
 	    (concat "Bcc: " mi-message-user-mail-address "\n"))
@@ -116,39 +115,39 @@ Argument AUTH-FILE authentication file."
 	     ">.*" ""
 	     (replace-regexp-in-string ".*<" "" envelope-content)))
 	   "\n"))
-  
+
   (insert mi-message-header-envelope)
 
   (if (not (null mi-message-header-bcc))
       (insert mi-message-header-bcc))
-  
+
   (if (not (null mi-message-header-to))
       (progn
 	(goto-char (point-min))
 	(while (search-forward-regexp "^To: $" (point-max) t)
 	  (replace-match (concat "To: " mi-message-header-to)))))
-  
+
   (if (not (null mi-message-header-subject))
       (progn
 	(goto-char (point-min))
 	(while (search-forward-regexp "^Subject: $" (point-max) t)
 	  (replace-match (concat "Subject: " mi-message-header-subject)))))
-  
+
   (if (not (null mi-message-header-cc))
       (progn
 	(if (or (null (gnus-fetch-field "Cc"))
-		(eq "" (gnus-fetch-field "Cc"))
-	    (progn
-	      (insert (concat "\nCc: " mi-message-header-cc))
-	      (goto-char (point-min))
-	      (delete-blank-lines)))))
+		(eq "" (gnus-fetch-field "Cc")))
+		(progn
+		  (insert (concat "\nCc: " mi-message-header-cc))
+		  (goto-char (point-min))
+		  (delete-blank-lines)))))
 
   (setq
    mi-message-header-envelope nil
    mi-message-header-to nil
    mi-message-header-subject nil
    mi-message-header-cc nil
-   mi-message-header-bcc nil)))
+   mi-message-header-bcc nil))
 
 ;; hooks
 (add-hook 'message-header-setup-hook

@@ -15,20 +15,44 @@
   (list (lambda () (setq comment-start "#")))
   "Major mode for writing journals.")
 
-(defvar mi-journal-version "0.1" "Journal mode version.")
-(defvar mi-journal-default-emacs-directory "~/emacs" "Default Emacs data directory.")
-(defvar mi-journal-default-directory nil "Default journal directory.")
-(defvar mi-journal-date-year nil "Current year in digit.")
-(defvar mi-journal-date-month nil "Current month in digit.")
-(defvar mi-journal-date-current-date nil "Current date.")
+(defvar mi-journal-version
+  "0.1"
+  "Journal mode version.")
+(defvar mi-journal-default-emacs-directory
+  "~/emacs"
+  "Default Emacs data directory.")
+(defvar mi-journal-default-directory
+  nil
+  "Default journal directory.")
+(defvar mi-journal-date-year
+  nil
+  "Current year in digit.")
+(defvar mi-journal-date-month
+  nil
+  "Current month in digit.")
+(defvar mi-journal-date-current-date
+  nil
+  "Current date.")
 
-(defvar mi-journal-default-file-suffix ".jnl" "Default journal file suffix.")
-(defvar mi-journal-current-journal nil "Current journal file.")
-(defvar mi-journal-current-journal-fullpath nil "Current journal file in full path.")
-(defvar mi-journal-current-buffer nil "Buffer for journal.")
+(defvar mi-journal-default-file-suffix
+  ".jnl"
+  "Default journal file suffix.")
+(defvar mi-journal-current-journal
+  nil
+  "Current journal file.")
+(defvar mi-journal-current-journal-fullpath
+  nil
+  "Current journal file in full path.")
+(defvar mi-journal-current-buffer
+  nil
+  "Buffer for journal.")
 
-(defvar journal-start nil "Marker for the start of a journal.")
-(defvar journal-end nil "Marker for the end of a journal.")
+(defvar journal-start
+  nil
+  "Marker for the start of a journal.")
+(defvar journal-end
+  nil
+  "Marker for the end of a journal.")
 
 ;; functions
 (defun mi-journal-kick-off ()
@@ -43,12 +67,17 @@
 	mi-journal-current-journal (concat mi-journal-date-year "/" mi-journal-date-month mi-journal-default-file-suffix)
 	mi-journal-current-journal-fullpath (concat mi-journal-default-directory "/" mi-journal-current-journal))
   ;; make default journal directory
-  (make-directory mi-journal-default-directory mi-journal-default-emacs-directory)
+  (make-directory mi-journal-default-directory
+		  mi-journal-default-emacs-directory)
   ;; make year directory
-  (make-directory (concat mi-journal-default-directory "/" mi-journal-date-year) mi-journal-default-directory)
+  (make-directory (concat mi-journal-default-directory
+			  "/"
+			  mi-journal-date-year)
+		  mi-journal-default-directory)
 
   (progn
-    (setq mi-journal-current-buffer (create-file-buffer (concat mi-journal-date-month mi-journal-default-file-suffix)))
+    (setq mi-journal-current-buffer
+	  (create-file-buffer (concat mi-journal-date-month mi-journal-default-file-suffix)))
     (set-buffer mi-journal-current-buffer)
     (if (file-exists-p mi-journal-current-journal-fullpath)
 	(insert-file-contents mi-journal-current-journal-fullpath))
@@ -76,9 +105,9 @@
     (beginning-of-line)
     (setq line-begin (point))
     (end-of-line)
-    (setq line-end (point))
-    (setq mi-string (buffer-substring line-begin line-end))
-    (setq mi-string-new (replace-regexp-in-string
+    (setq line-end (point)
+	  mi-string (buffer-substring line-begin line-end)
+	  mi-string-new (replace-regexp-in-string
 			 "\\(.+\\)\\(Date:.*[-]*[0-9][0-9][-]*\\)\\(.+\\)\\'"
 			 " \\1\n\n\\2\n\n\\3 " mi-string))
     (if (not (equal mi-string mi-string-new))
@@ -93,9 +122,8 @@
 (defun mi-journal-save-journal ()
   "Save current journal."
   (interactive)
-  (if (and
-       mi-journal-current-buffer
-       mi-journal-current-journal)
+  (if (and mi-journal-current-buffer
+	   mi-journal-current-journal)
       (if (buffer-modified-p mi-journal-current-buffer)
 	  (progn
 	    (set-buffer mi-journal-current-buffer)
@@ -111,20 +139,26 @@
       (progn
 	(set-buffer mi-journal-current-buffer)
 	(goto-char (point-min))
-	(if (null (re-search-forward (concat "Date: " mi-journal-date-current-date "\n") nil t))
+	(if (null (re-search-forward (concat "Date: " mi-journal-date-current-date "\n")
+				     nil
+				     t))
 	    (progn
 	      (insert (concat "Date: " mi-journal-date-current-date "\n\n\n\n"))
 	      (goto-char (point-min))
 	      (forward-line 2)))))
-  (set-marker journal-start (point)))
+  (set-marker journal-start
+	      (point)))
 
 (defun mi-journal-jump-to-previous ()
   "Jump to previous journal entry."
   (interactive)
-  (setq current-point (point))
+  (setq current-point(point))
   (forward-line -2)
   (unhighlight-regexp (match-string 0))
-  (if (null (re-search-backward "Date:.*" nil t 1))
+  (if (null (re-search-backward "Date:.*"
+				nil
+				t
+				1))
       (progn
 	(goto-char current-point)
 	(message "No more entries."))
@@ -137,7 +171,10 @@
   (interactive)
   (setq current-point (point))
   (unhighlight-regexp (match-string 0))
-  (if (null (re-search-forward "Date:.*" nil t 1))
+  (if (null (re-search-forward "Date:.*"
+			       nil
+			       t
+			       1))
       (progn
 	(goto-char current-point)
 	(message "No more entries"))
@@ -151,12 +188,16 @@
   (setq day
 	(read-from-minibuffer "Which day to go to? "))
   (if (>= 1 (string-width day))
-      (setq day (concat "0" day)))
+      (setq day
+	    (concat "0" day)))
   (setq current-point (point))
-  (setq target-day (concat mi-journal-date-month "-" day))
+  (setq target-day
+	(concat mi-journal-date-month "-" day))
   (unhighlight-regexp (match-string 0))
   (goto-char (point-min))
-  (if (null (re-search-forward (concat "Date:[ ].*" target-day ".*") nil t))
+  (if (null (re-search-forward (concat "Date:[ ].*"target-day ".*")
+			       nil
+			       t))
       (message "No journal entry on %s" target-day)
     (progn
       (forward-line 1)
