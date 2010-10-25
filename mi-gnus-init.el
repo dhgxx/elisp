@@ -1,4 +1,6 @@
-;; mi-gnus-init.el
+;; mi-gnus-init.el -- gnuf configuration
+
+(require 'supercite)
 
 ;; startup file
 (setq
@@ -26,10 +28,6 @@
 ;; more news group
 (add-to-list 'gnus-secondary-select-methods
              '(nnml ""))
-;;(add-to-list 'gnus-secondary-select-methods
-;;             '(nntp "news.gmane.org"))
-;;(add-to-list 'gnus-secondary-select-methods
-;;			 '(nnslashdot ""))
 
 ;; expiring rules
 (setq gnus-auto-expirable-newsgroups
@@ -43,25 +41,39 @@
 ;; coding system
 ;;
 ;; gnus default
-(setq
- gnus-default-charset 'utf-8
- gnus-group-name-charset-group-alist '((".*" . utf-8)
-				       ("^cn\\.*" . chinese-iso-8bit)
-				       ("^tw\\.*" . big5))
- gnus-summary-show-article-charset-alist
- '((1 . ascii)
-   (2 . iso-8859-1)
-   (3 . gb2312)
-   (4 . gb18030)
-   (5 . big5)
-   (6 . utf-8))
- gnus-newsgroup-ignored-charsets
- '(unknown-8bit x-unknown x-gbk))
+(eval-after-load "gnus-group"
+  '(nconc
+    '(("^tw\\..*" . chinese-big5)
+      ("^cn\\..*" . chinese-iso-8bit))
+    gnus-group-name-charset-group-alist))
 
-;; coding alias
-;; maybe now we can handle gb18030
-;;(define-coding-system-alias 'gb18030 'gb2312)
-(define-coding-system-alias 'gbk 'gb18030)
+(eval-after-load "gnus-sum"
+  '(progn
+     (nconc '((1 . us-ascii)
+	      (2 . iso-8859-1)
+	      (3 . gb2312)
+	      (4 . gbk)
+	      (5 . gb18030)
+	      (6 . big5)
+	      (7 . big5-hkscs)
+	      (8 . utf-8))
+	    gnus-summary-show-article-charset-alist)
+     (add-to-list 'gnus-newsgroup-variables 'mm-coding-system-priorities)
+     (setq gnus-parameters
+	   (nconc
+	    ;; Some charsets are just examples!
+	    '((".*"
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 gb2312 gbk gb18030 big5 big5-hkscs utf-8)))
+	      ("^tw\\..*"
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 big5 big5-hkscs)))
+	      ("^cn\\..*"
+	       (mm-coding-system-priorities
+		'(us-ascii iso-8859-1 gb2312 gbk gb18030))))
+	    gnus-parameters))))
+
+(setq gnus-default-charset 'utf-8)
 
 ;; visual appearance
 ;;
@@ -103,75 +115,52 @@
 
 ;; process ansi colors
 (autoload 'ansi-color-apply-on-region "ansi-color")
-(defun article-treat-ansi-sequences ()
-  "Translate ANSI SGR control sequences into overlays or extents."
-  (interactive)
-  (save-excursion
-    (when (article-goto-body)
-      (let ((inhibit-read-only t))
-        (ansi-color-apply-on-region (point) (point-max))))))
-(add-hook 'gnus-part-display-hook 'article-treat-ansi-sequences)
+(add-hook 'gnus-part-display-hook
+	  '(lambda ()
+	     (save-excursion
+	       (when (article-goto-body)
+		 (let ((inhibit-read-only t))
+		   (ansi-color-apply-on-region (point) (point-max)))))))
 
 ;; use rfc2047
-(require 'rfc2047)
-(defalias 'mail-header-encode-parameter 'rfc2047-encode-parameter)
-(setq rfc2047-allow-incomplete-encoded-text nil)
-(progn
-  (add-to-list 'rfc2047-header-encoding-alist '("Subject"))
-  (add-to-list 'rfc2047-charset-encoding-alist '(gbk . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(gb2312 . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(gb18030 . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(big5 . B))
-  (add-to-list 'rfc2047-charset-encoding-alist '(utf-8 . B)))
+(eval-after-load "rfc2047"
+  '(progn
+     (defalias 'mail-header-encode-parameter 'rfc2047-encode-parameter)
+     (add-to-list 'rfc2047-header-encoding-alist '("Subject"))))
 
 ;; encoding priorities
-(setq mm-coding-system-priorities '(iso-8859-1 gb2312 gb18030 big5 utf-8))
+(eval-after-load "mm-decode"
+  '(progn
+     (add-to-list 'mm-body-charset-encoding-alist '(gb2312 . 8bit))
+     (add-to-list 'mm-body-charset-encoding-alist '(big5 . 8bit))
+     (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64) t)))
 
 ;; decide encoding according group names
-(defvar mi-organization "Pluto The Planet"
-  "My default organization name.")
-(defvar mi-signature-file "~/.signature"
-  "My default signature file name.")
-(defvar mi-chinese-nickname "dhg"
-  "My default Chinese nick name.")
+(defcustom mi-message-header-organization "Pluto The Planet"
+  "My default organization name."
+  :type 'string
+  :group 'mi-gnus)
+(defcustom mi-message-signature-file "~/.signature-rotated"
+  "My default signature file name."
+  :type 'string
+  :group 'mi-gnus)
+(defcustom mi-message-header-chinese-nickname "dhg"
+  "My default Chinese nick name."
+  :type 'string
+  :group 'mi-gnus)
 
 ;; defaults to using only utf-8
 (setq gnus-posting-styles
       '((".*"
-         (name user-full-name)
-         (address "tamgya@gmail.com")
-         (signature-file mi-signature-file)
-         (organization mi-organization)
-         (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 utf-8))))
-	("^cn\\..*"
-         (name mi-chinese-nickname)
-         (address "tamgya@gmail.com")
-         (signature-file mi-signature-file)
-         (organization mi-organization)
-         (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 gb2312 gb18030 utf-8))))
-        ("^tw\\..*"
-         (name mi-chinese-nickname)
-         (address "tamgya@gmail.com")
-         (signature-file mi-signature-file)
-         (organization mi-organization)
-         (eval (setq mm-coding-system-priorities
-                     '(iso-8859-1 big5 utf-8))))
-	(".*\\.bbs\\..*"
-	 (name mi-chinese-nickname)
-	 (signature-file "~/.signature-rotated")
-	 (organization-file mi-orgazation)
-	 (eval (setq mm-coding-system-priorities
-		     '(iso-8859-1 gb2312 gb18030 big5 utf-8))))
-	("^\\(\\(nnfolder\\)\\|\\(nnml\\)\\):.*mail\\..*"
-	 (name user-full-name)
-	 (address "tamgya@gmail.com")
-	 (signature-file mi-signature-file)
-	 (organization mi-organization)
-	 (eval (setq mm-coding-system-priorities
-		     '(iso-8859-1 gb2312 gb18303 big5 utf-8))))))
-
+         (name mi-message-user-full-name)
+         (address mi-message-user-mail-address)
+         (signature-file mi-message-signature-file)
+         (organization mi-message-header-organization))
+        ("^tw\\."
+         (name mi-message-header-chinese-nickname))
+        ("^cn\\."
+         (name mi-message-header-chinese-nickname))))
+ 
 ;; confirm sending mail to newsgroups
 (setq gnus-confirm-mail-reply-to-news t)
 
@@ -194,38 +183,33 @@
 (ad-activate 'message-send)
 
 ;; local posting time
-
 (add-hook 'gnus-article-prepare-hook
 	  'gnus-article-date-local)
-;;(add-hook 'gnus-article-prepare-hook
-;;	  'gnus-article-fill-long-lines)
 
 ;; MFT things
 (setq message-subscribed-regexps
       '("\\(\\(.*@[Oo][Pp][Ee][Nn][Ss][Uu][Ss][Ee]\\)\\|\\(.*@[Ff][Rr][Ee][Ee][Bb][Ss][Dd]\\)\\|\\(.*@[Oo][Pp][Ee][Nn][Ss][Oo][Ll][Aa][Rr][Ii][Ss]\\)\\|\\(.*@[Oo][Pp][Ee][Nn][Bb][Ss][Dd]\\)\\|\\(.*@[Ll][Ii][Ss][Tt][Ss]\\.[Ff][Rr][Ee][Ee][Dd][Ee][Ss][Kk][Tt][Oo][Pp]\\)\\|\\(.*@[Ll][Ii][Ss][Tt][Ss]\\.[Xx]\\)\\)\\.[Oo][Rr][Gg]"))
 
 ;; citation style
-(require 'supercite)
+(defvar mi-message-safe-time-val nil
+  "Nil if date string is invalid")
 
-(defvar mi-is-reply-to-bbs nil "Whether we are replying to a BBS")
-(defvar mi-safe-time-val nil "Nil if date string is invalid")
-
-(defun mi-header-on-wrote ()
+(defun mi-message-header-on-wrote ()
   "Similar to `sc-header-on-said', but using a shorter date string."
-  (setq mi-safe-time-val (safe-date-to-time (sc-mail-field "date")))
+  (setq mi-message-safe-time-val (safe-date-to-time (sc-mail-field "date")))
   (let ((sc-mumble "")
 	(whofrom (sc-whofrom)))
     (if whofrom
-	(insert (sc-hdr "\nOn " (format-time-string "%Y/%m/%d at %R" mi-safe-time-val) ", ")
+	(insert (sc-hdr "\nOn " (format-time-string "%Y/%m/%d at %R" mi-message-safe-time-val) ", ")
 		whofrom " wrote:\n"))))
 
-(defun mi-header-on-wrote-cn ()
+(defun mi-message-header-on-wrote-cn ()
   "Similar to `mi-header-on-said', but using Chinese."
   (defvar mi-whofrom-id nil
-    "The ID portion of the complete string of a BBS author.")
+	"The ID portion of the complete string of a BBS author.")
   (defvar mi-whofrom-nick nil
     "The nickname portion of the complete string of a BBS author")
-  (setq mi-safe-time-val (safe-date-to-time (sc-mail-field "date")))
+  (setq mi-message-safe-time-val (safe-date-to-time (sc-mail-field "date")))
   (let ((sc-mumble "")
 	(whofrom (sc-whofrom)))
     (if whofrom
@@ -237,9 +221,9 @@
 	       (equal mi-whofrom-id mi-whofrom-nick)
 	       (= (string-width mi-whofrom-id)
 		  (string-width mi-whofrom-nick)))
-	      (insert (sc-hdr "\n【 在 " (format-time-string "%Y年%m月%d日 %H点%M分%S秒" mi-safe-time-val) ", ")
+	      (insert (sc-hdr "\n【 在 " (format-time-string "%Y年%m月%d日 %H点%M分%S秒" mi-message-safe-time-val) ", ")
 		      mi-whofrom-id " 说道: 】\n")
-	    (insert (sc-hdr "\n【 在 " (format-time-string "%Y年%m月%d日 %H点%M分%S秒" mi-safe-time-val) ", ")
+	    (insert (sc-hdr "\n【 在 " (format-time-string "%Y年%m月%d日 %H点%M分%S秒" mi-message-safe-time-val) ", ")
 		    mi-whofrom-id " (" mi-whofrom-nick ") 说道: 】\n"))))))
 
 ;; super citation style
@@ -267,87 +251,92 @@
   (setq sc-cite-blank-lines-p t
 	sc-preferred-header-style 1 ; use bbs style citation header
 	sc-citation-delimiter ":"
-	sc-citation-delimiter-regexp "\\([:word:]\\|[_.]\\)+[:]+"
+	sc-citation-delimiter-regexp "\\([:word:]\\|[_.]\\)+:+"
 	message-yank-prefix ": "
 	message-yank-cited-prefix ":"
 	message-yank-empty-prefix ":"
 	message-cite-prefix-regexp "\\(\\([:word:]\\|[_.]\\)*:+\\|[ ]*[]:+|}]\\)+"))
-(defvar mi-is-or-not-newsgroup nil "To see whether or not we are in a newsgroup browsing.")
+
+(defvar mi-message-bbs-p nil
+  "To see whether or not we are replying messages in a newsgroup")
+
 (defun mi-message-citation-style ()
   "We are replying to a BBS"
   (interactive)
-  (setq mi-is-or-not-newsgroup (gnus-fetch-field "Xref"))
-  (if (not (null (string-match ".*\\.[Bb][Bb][Ss]\\..*" mi-is-or-not-newsgroup)))
-      (setq mi-is-reply-to-bbs t))
+  (if (and
+       (message-news-p)
+       (string-match ".*\\.[Bb][Bb][Ss]\\..*" (gnus-fetch-field "Xref")))
+      (setq mi-message-bbs-p t))
   (save-excursion
-    (if mi-is-reply-to-bbs
+    (if mi-message-bbs-p
 	(mi-message-citation-style-bbs)
-      (mi-message-citation-style-normal))))
+      (mi-message-citation-style-normal)))
+  (setq mi-message-bbs-p nil))
 
 ;;  citation post hook
 ;; post functions
-(defun mi-citation-post-hooks ()
+(defun mi-message-citation-post-hooks ()
   "My own post hooks for citation"
   (interactive)
-  (mi-citation-delete-signature)
+  (mi-message-citation-delete-signature)
   (mi-message-header-subject-rewrite)
-  (mi-citation-ready-to-compose)
-  (setq mi-is-reply-to-bbs nil))
+  (mi-message-citation-ready-to-compose))
 
-(defvar mi-signature-current-line nil "Current working line within in signature region.")
-(defun mi-citation-ready-to-compose ()
+(defvar mi-message-signature-current-line -1
+  "Current working line within in signature region.")
+
+(defun mi-message-citation-ready-to-compose ()
   "Do something after citation completes"
   (interactive)
   (goto-char (point-max))
   (while (search-backward-regexp "^\\([-]\\|[_]\\)+[ ]*$" (point-min) t)
-    (progn
-      (setq mi-signature-current-line (line-number-at-pos (point)))
-      (beginning-of-line)
-      (newline 3)
-      (goto-char (point-min))
-      (forward-line mi-signature-current-line))))
+    (setq mi-message-signature-current-line (line-number-at-pos (point))))
+  
+  (if (< 0 mi-message-signature-current-line)
+      (progn
+	(beginning-of-line)
+	(newline 3)
+	(goto-char (point-min))
+	(forward-line mi-message-signature-current-line)))
+  (setq mi-message-signature-current-line -1))
 
-(defvar mi-signature-region-start nil "A generic marker for the start point of a region.")
-(defvar mi-signature-region-end nil "A generic marker for the end point of a region.")
+(defvar mi-message-signature-region-start -1
+  "Start position of a region.")
+(defvar mi-message-signature-region-end -1
+  "End position of a region.")
 
-(defun mi-citation-delete-signature ()
+(defun mi-message-citation-delete-signature ()
   "Delete signatures in citation"
   (interactive)
   (progn
     (goto-char (point-min))
-    (setq mi-signature-region-start
-	  (search-forward-regexp "^\\([ ]*[>][ ]*\\)+\\([-][-]+\\|[_][_]+\\)[ ]*$" (point-max) t))
-    (if (null mi-signature-region-start)
-	(progn
-	  (goto-char (point-min))
-	  (setq mi-signature-region-start
-		(search-forward-regexp "^\\([ ]*[:][ ]*\\)+\\([-][-]+\\|[_][_]+\\)[ ]*$" (point-max) t)))))
-  
-  (if (not (null mi-signature-region-start))
+    (while (search-forward-regexp "^\\([ ]*[>|:][ ]*\\)+\\([-][-]+\\|[_][_]+\\)[ ]*$" (point-max) t)
+      (setq mi-message-signature-region-start (point))))
+
+  (if (not (= -1 mi-message-signature-region-start))
       (progn
 	(beginning-of-line)
-	(setq mi-signature-region-start (point))))
+	(setq mi-message-signature-region-start (point))))
   
   (progn
     (goto-char (point-max))
-    (setq mi-signature-region-end (search-backward-regexp "^[-][-]+[ ]*$" (point-min) t)))
+    (while (search-backward-regexp "^[-][-]+[ ]*$" (point-min) t)
+      (setq mi-message-signature-region-end (point)))
   
-  (if (and mi-signature-region-start mi-signature-region-end)
-      (if (and
-	   (> mi-signature-region-start (point-min))
-	   (< mi-signature-region-end (point-max)))
-	  (progn
-	    (delete-region mi-signature-region-start mi-signature-region-end)
-	    (insert (concat
-		     sc-citation-delimiter " ................ \n"))
-	    (setq mi-signature-region-start nil
-		  mi-signature-region-end nil)
-	    (goto-char (point-max))
-	    (search-backward-regexp "^[-][-]+[ ]*" (point-min) t)))))
+    (if (and
+	 (< 0 mi-message-signature-region-start)
+	 (< 0  mi-message-signature-region-end)
+	 (>= mi-message-signature-region-start (point-min))
+	 (<= mi-message-signature-region-end (point-max)))
+	(progn
+	  (delete-region mi-message-signature-region-start mi-message-signature-region-end)
+	  (insert (concat sc-citation-delimiter " ................ \n"))
+	  (setq mi-message-signature-region-start -1
+		mi-message-signature-region-end -1)
+	  (goto-char (point-max))
+	  (search-backward-regexp "^[-][-]+[ ]*" (point-min) t)))))
 
 ;; citation funcion
-(setq message-cite-function
-      'message-cite-original-without-signature)
 ;; blank lines should be cited, too
 (setq sc-cite-blank-lines-p t)
 ;; nesting citation
@@ -355,15 +344,15 @@
 ;; don't fill citation
 (setq sc-auto-fill-region-p nil)
 (add-hook 'sc-pre-hook 'mi-message-citation-style)
-(add-hook 'sc-post-hook 'mi-citation-post-hooks)
+(add-hook 'sc-post-hook 'mi-message-citation-post-hooks)
 (add-hook 'mail-citation-hook 'sc-cite-original)
 
-;; mi-header-on-wrote now follows `sc-no-header' in
+;; mi-message-header-on-wrote now follows `sc-no-header' in
 ;; `sc-rewrite-header-list'.
 (setq mi-tmp-rewrite-header-list (cdr sc-rewrite-header-list))
-(add-to-list 'mi-tmp-rewrite-header-list '(mi-header-on-wrote))
-(add-to-list 'mi-tmp-rewrite-header-list '(mi-header-on-wrote-cn))
-;; now the first one is `mi-header-on-wrote-cn'.
+(add-to-list 'mi-tmp-rewrite-header-list '(mi-message-header-on-wrote))
+(add-to-list 'mi-tmp-rewrite-header-list '(mi-message-header-on-wrote-cn))
+;; now the first one is `mi-message-header-on-wrote-cn'.
 (add-to-list 'mi-tmp-rewrite-header-list '(sc-no-header))
 (setq sc-rewrite-header-list mi-tmp-rewrite-header-list)
 (setq mi-tmp-rewrite-header-list nil)
@@ -372,7 +361,8 @@
 ;;
 
 ;; mail header subjecr rewrite
-(defvar mi-message-header-subject nil "Rewritten mail header subject, include it with double quotation markers.")
+(defvar mi-message-header-subject nil
+  "Rewritten mail header subject, include it with double quotation markers.")
 (defun mi-message-header-subject-rewrite ()
   "Rewrite mail header subject, include it with double quotation markers."
   (setq mi-message-header-subject
@@ -462,7 +452,7 @@
    ("mail.newsletters"
     "^From:\\(\\(.*\\)\\|\\(.*[Nn][Oo]-[Rr][Ee][Pp][Ll][Yy].*\\)\\)@.*\\(\\([Nn][Oo][Rr][Ee][Pp][Ll][Yy]\\)\\|\\([Mm][Aa][Ii][Ll]\\.[Cc][Oo][Mm][Mm][Uu][Nn][Ii][Cc][Aa][Tt][Ii][Oo][Nn][Ss]\\.[Ss][Uu][Nn]\\)\\|\\([Cc][Oo][Mm][Mm][Uu][Nn][Ii][Cc][Aa][Tt][Ii][Oo][Nn][Ss]2\\)\\|\\([Gg][Ee][Oo][Cc][Aa][Cc][Hh][Ii][Nn][Gg]\\)\\|\\([Aa][Pp][Pp][Ll][Ee]\\)\\|\\([Ee][Cc][Oo][Nn][Oo][Mm][Ii][Ss][Tt]\\)\\|\\([Ff][Rr][Ee][Ee][Ss][Oo][Tt][Ww][Aa][Rr][Ee][Mm][Aa][Gg][Aa][Zz][Ii][Nn][Ee]\\)\\|\\([Nn][Yy][Tt][Ii][Mm][Ee][Ss]\\)\\|\\([Pp][Hh][Oo][Rr][Oo][Nn][Ii][Xx]\\)\\|\\([Ss][Ll][Aa][Ss][Hh][Dd][Oo][Tt]\\)\\|\\([Oo][Ss][Nn][Ee][Ww][Ss]\\)\\|\\([Yy][Ee][Ee][Yy][Aa][Nn]\\)\\|\\([Zz][Ii][Kk][Ii]\\)\\|\\([Ss][Oo][Uu][Rr][Cc][Ee][Ff][Oo][Rr][Gg][Ee]\\)\\|\\([Mm][Yy][Ff][Oo][Nn][Tt][Ss]\\)\\)\\.\\(\\([Oo][Rr][Gg]\\)\\|\\([Cc][Oo][Mm]\\)\\|\\([Nn][Ee][Tt]\\)\\).*")
    ("mail.x11.ati"
-    "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*[Xx][Oo][Rr][Gg]-[Dd][Rr][Ii][Vv][Ee][Rr]-[Aa][Tt][Ii].*@[Ll][Ii][Ss][Tt][Ss]\\.[Xx]\\.[Oo][Rr][Gg].*")
+    "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):\\(.*[Xx][Oo][Rr][Gg]-[Dd][Rr][Ii][Vv][Ee][Rr]-[Aa][Tt][Ii].*\\|.*\\)@\\([Ll][Ii][Ss][Tt][Ss]\\.[Xx]\\|[Bb][Uu][Gg][Ss]\\.[Dd][Ee][Bb][Ii][Aa][Nn]\\)\\.[Oo][Rr][Gg].*")
    ("mail.x11.radeonhd"
     "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\|\\(Subject\\)\\):\\(\\(.*[Rr][Aa][Dd][Ee][Oo][Nn][Hh][Dd].*\\)\\|\\(.*[Rr][Aa][Dd][Ee][Oo][Nn][Hh][Dd].*@[Oo][Pp][Ee][Nn][Ss][Uu][Ss][Ee]\\.[Oo][Rr][Gg].*\\)\\)")
    ("mail.x11.nouveau"
@@ -483,15 +473,13 @@
 (gnus-demon-add-handler 'gnus-demon-scan-news 10 t)
 
 ;; my own gnus defun's
-(defvar mi-gnus-default-article-number 200
-  "Default number of articles to fetch in Gnus")
-(defun mi-gnus-select-group ()
-  "To fetch a pre-set number of articles from a group in Gnus.
-See `mi-gnus-default-article-number' for more information."
-  (interactive)
-  (set-buffer (current-buffer))
-  (gnus-group-select-group mi-gnus-default-article-number))
+(defcustom mi-gnus-default-article-number 200
+  "Default number of articles to fetch in Gnus"
+  :type 'integer
+  :group 'mi-gnus)
 
 (global-set-key "\C-cg" nil)
 (global-set-key "\C-cgg" 'gnus)
-(global-set-key "\C-cgf" 'mi-gnus-select-group)
+(global-set-key "\C-cgf" '(lambda ()
+			    (interactive)
+			    (gnus-group-select-group mi-gnus-default-article-number)))

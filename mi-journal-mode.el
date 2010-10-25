@@ -46,7 +46,7 @@
   (make-directory mi-journal-default-directory mi-journal-default-emacs-directory)
   ;; make year directory
   (make-directory (concat mi-journal-default-directory "/" mi-journal-date-year) mi-journal-default-directory)
-  
+
   (progn
     (setq mi-journal-current-buffer (create-file-buffer (concat mi-journal-date-month mi-journal-default-file-suffix)))
     (set-buffer mi-journal-current-buffer)

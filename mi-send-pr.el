@@ -10,34 +10,43 @@
 (define-generic-mode 'send-pr-mode
   ()
   '("To" "From" "Subject" "Reply-To" "Cc" "X-send-pr-version" "X-GNATS-Notify"
-    ">Submitter-Id" ">Originator" ">Organization" ">Confidential" ">Synopsis"
-    ">Severity" ">Priority" ">Category" ">Class" ">Release" ">Environment"
-    ">Description" ">How-To-Repeat" ">Fix")
+	">Submitter-Id" ">Originator" ">Organization" ">Confidential" ">Synopsis"
+	">Severity" ">Priority" ">Category" ">Class" ">Release" ">Environment"
+	">Description" ">How-To-Repeat" ">Fix")
   '(("\\(\\[.*\\]\\)" 1 'font-lock-comment-face))
   '("\\.[Pp][Rr]\\'")
   (list (lambda () (setq comment-start "[")))
   "Major mode for very simple problem reports highlighting.")
 
 (defvar mi-pr-version "MiSendPr 0.3")
-(defvar mi-pr-tmp-directory "mi-send-pr" "Default send-pr tmp directory.")
-(defvar mi-pr-template "~/emacs/template/pr.template" "PR Template.")
 (defvar mi-pr-working-file nil "Default working file for sending pr.")
 (defvar mi-pr-working-buffer nil "Default working buffer for sending pr.")
 (defvar mi-pr-fill-list '() "A list for lines where empty fields shoule be filled.")
 (defvar mi-pr-reserve-word "TO BE FILLED" "Reserve word for problem reports.")
-(defvar mi-pr-subject-string "Problem report" "Fail safe subject for problem report.")
 (defvar mi-pr-attachment-filename nil "Attachment file name.")
 (defvar mi-pr-attachment-prettyname nil "Better file name handling.")
 (defvar mi-pr-filename-suffix ".pr" "Default filename suffix for a problem report.")
 (defvar mi-pr-key-input nil "Capture key input sequence while filling out a problem report.")
+(defcustom mi-pr-tmp-directory "/var/tmp"
+  "Default send-pr tmp directory. e.g. '/var/tmp'"
+  :type 'string
+  :group 'mi-send-pr)
+(defcustom mi-pr-template-path "~/emacs/template/pr.template"
+  "Absolute file path to PR Template. e.g. '~/emacs/template/pr.template'"
+  :type 'string
+  :group 'mi-send-pr)
+(defcustom mi-pr-subject-string "Problem report"
+  "Fail safe subject for problem report."
+  :type 'string
+  :group 'mi-send-pr)
 (defcustom mi-pr-default-to-address "freebsd-gnats-submit@freebsd.org"
   "Default gnats server address."
   :type 'string
-  :group 'data)
+  :group 'mi-send-pr)
 (defcustom mi-pr-organization-name "XBSD Networks"
   "Default organization name for mi-send-pr."
   :type 'string
-  :group 'data)
+  :group 'mi-send-pr)
 
 (defun mi-pr-fill-out-pr ()
   "Fill out a problem report."
@@ -74,7 +83,7 @@
 	(smtpmail-send-it)
 	(bury-buffer mi-pr-working-buffer)
 	(kill-buffer mi-pr-working-buffer))
-    (message "User quitted sending!")))
+    (message "Message sending cancelled!")))
 
 (defun mi-pr-build-fill-list ()
   "Build a fill list."
@@ -146,15 +155,15 @@
 (defun mi-pr-make-pr ()
   "Make a problem report."
   (interactive)
-  (make-directory (concat "/var/tmp/" mi-pr-tmp-directory) "/var/tmp")
+  (make-directory (concat mi-pr-tmp-directory "/mi-send-pr") "/var/tmp")
   (setq mi-pr-working-file
 	(make-temp-file
-	 (concat "/var/tmp/" mi-pr-tmp-directory "/" user-login-name "-")
+	 (concat mi-pr-tmp-directory "/mi-send-pr/" user-login-name "-")
 	 nil
 	 mi-pr-filename-suffix))
   (setq mi-pr-working-buffer (create-file-buffer mi-pr-working-file))
   (set-buffer mi-pr-working-buffer)
-  (insert-file-contents-literally mi-pr-template)
+  (insert-file-contents-literally mi-pr-template-path)
   (switch-to-buffer mi-pr-working-buffer)
   (write-file mi-pr-working-file)
   (local-set-key [tab] 'mi-pr-fill-out-pr)
