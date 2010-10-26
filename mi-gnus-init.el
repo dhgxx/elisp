@@ -203,13 +203,7 @@
 
 ;; MFT things
 (setq message-subscribed-regexps
-      '((concat
-	 "\\(\\(.*@[Oo][Pp][Ee][Nn][Ss][Uu][Ss][Ee]\\)\\|"
-	 "\\(.*@[Ff][Rr][Ee][Ee][Bb][Ss][Dd]\\)\\|"
-	 "\\(.*@[Oo][Pp][Ee][Nn][Ss][Oo][Ll][Aa][Rr][Ii][Ss]\\)\\|"
-	 "\\(.*@[Oo][Pp][Ee][Nn][Bb][Ss][Dd]\\)\\|"
-	 "\\(.*@[Ll][Ii][Ss][Tt][Ss]\\.[Ff][Rr][Ee][Ee][Dd][Ee][Ss][Kk][Tt][Oo][Pp]\\)\\|"
-	 "\\(.*@[Ll][Ii][Ss][Tt][Ss]\\.[Xx]\\)\\)\\.[Oo][Rr][Gg]")))
+      '(".*@\\(\\(opensuse\\)\\|\\(freebsd\\)\\|\\(opensolaris\\)\\|\\(openbsd\\)\\|\\(lists\\.freedesktop\\)\\|\\(lists\\.x\\)\\)\\.org.*"))
 
 ;; citation style
 (defvar mi-message-safe-time-val nil
