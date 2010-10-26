@@ -42,6 +42,9 @@
 
 (eval-after-load "gnus-sum"
   '(progn
+     (setq gnus-newsgroup-ignored-charsets
+	   '(unknown-8bit x-unknown))
+     (define-coding-system-alias 'x-gbk 'gbk)
      (nconc '((1 . us-ascii)
 	      (2 . iso-8859-1)
 	      (3 . gb2312)
@@ -123,10 +126,8 @@
 ;; group buffer line format
 (setq gnus-group-line-format
       "%M%S%p%P%5y:%B%(%g%)%l %O\n"
-      ;;gnus-summary-line-format
-      ;;":%U%R %B %s %-70=|%3L|%-20,20n|%&user-date; \n")
       gnus-summary-line-format
-      ":%U%R %B %s %-80=|%3L|%-20,20n|%d| \n")
+      ":%U%R %B %s %-70=|%3L|%-20,20n|%&user-date; \n")
 
 ;; process ansi colors
 (autoload 'ansi-color-apply-on-region
@@ -486,7 +487,7 @@
 	("mail.freebsd.current"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*current.*@freebsd\\.org.*")
 	("mail.freedekstop.xorg"
-	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*xorg@\\(\\(lists\\.freedesktop\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*xorg@\\(\\(lists\\.freedesktop\\)\\|\\(freedesktop\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
 	("mail.opensolaris.amd64"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*amd-platform-.*@opensolaris\\.org.*")
 	("mail.opensolaris.desktop"
@@ -494,7 +495,7 @@
 	("mail.opensolaris.sysadmin"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*sysadmin-.*@opensolaris\\.org.*")
 	("mail.newsletters"
-	 "^From:\\(\\(.*\\)\\|\\(.*no-reply.*\\)\\|@.*\\(\\(noreply\\)\\|\\(mail\\.communications\\.sun\\)\\|\\(communications2\\)\\|\\(geocaching\\)\\|\\(apple\\)\\|\\(economist\\)\\|\\(freesoftwaremagazine\\)\\|\\(nytimes\\)\\|\\(phoronix\\)\\|\\(slashdot\\)\\|\\(osnews\\)\\|\\(yeeyan\\)\\|\\(ziki\\)\\|\\(sourceforge\\)\\|\\(myfonts\\)\\)\\.\\(\\(org\\)\\|\\(com\\)\\|\\(net\\)\\).*")
+	 "^From:\\(\\(.*\\)\\|\\(.*no-reply.*\\)\\)@.*\\(\\(noreply\\)\\|\\(mail\\.communications\\.sun\\)\\|\\(communications2\\)\\|\\(geocaching\\)\\|\\(apple\\)\\|\\(economist\\)\\|\\(freesoftwaremagazine\\)\\|\\(nytimes\\)\\|\\(phoronix\\)\\|\\(slashdot\\)\\|\\(osnews\\)\\|\\(yeeyan\\)\\|\\(ziki\\)\\|\\(sourceforge\\)\\|\\(myfonts\\)\\)\\.\\(\\(org\\)\\|\\(com\\)\\|\\(net\\)\\).*")
 	("mail.x11.ati"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):\\(\\(.*xorg-driver-ati.*\\)\\|\\(.*\\)\\)@\\(\\(lists\\.x\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
 	("mail.x11.radeonhd"
@@ -504,7 +505,7 @@
 	("mail.x11.kde"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*@kde\\.org.*")
 	("mail.x11.gnome-cn"
-	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*gnome-cn-lists.*@gnome\\.org.*")
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*gnome-cn-list@gnome\\.org.*")
 	("mail.local"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*@\\(\\(sol\\)\\|\\(pluton\\)\\|\\(mars\\)\\)\\.xbsd\\.name$")
 	("mail.old"

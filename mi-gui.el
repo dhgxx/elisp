@@ -10,6 +10,7 @@
 ;; display time
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
+(setq system-time-locale "C")
 (display-time)
 
 ;; no visible bell
