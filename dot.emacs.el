@@ -6,9 +6,8 @@
 (setq inhibit-startup-screen t
       initial-scratch-message nil)
 
-(setq
- gnus-init-file "~/emacs/elisp/mi-gnus-init.elc"
- gnus-directory "~/emacs/gnus")
+(setq gnus-init-file "~/emacs/elisp/mi-gnus-init.elc"
+      gnus-directory "~/emacs/gnus")
 
 ;; auto fill in text mode
 (if mi-startup-first-time

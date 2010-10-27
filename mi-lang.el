@@ -4,7 +4,7 @@
 (set-language-environment 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-clipboard-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
+;;(set-terminal-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (modify-coding-system-alist 'process "*" 'utf-8)
@@ -12,14 +12,14 @@
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (setq-default pathname-coding-system 'utf-8)
-(setq default-process-coding-system '(utf-8 . utf-8)
-      locale-coding-system 'utf-8
-      x-select-enable-clipboard t
-      x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+(setq default-process-coding-system '(utf-8 . utf-8))
+(setq locale-coding-system 'utf-8)
+(setq x-select-enable-clipboard t)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 ;; emacs23 xft fonts
 (when mi-use-xwindow
-  (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-12"))
+  (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-11"))
   (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'cyrillic-iso8859-5 '("Droid Sans Mono" . "unicode-bmp"))

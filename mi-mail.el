@@ -76,30 +76,35 @@ Argument AUTH-FILE authentication file."
    newsgroup-content (gnus-fetch-field "Newsgroups")
    envelope-content (or (gnus-fetch-field "To")
 			newsgroup-content))
-  (if (null envelope-content)
-      (progn
-	(setq envelope-content
-	      (read-from-minibuffer "Send a mail to: "))
-	(if (not (null envelope-content))
-	    (setq mi-message-header-to envelope-content)
-	  (setq mi-message-header-to nil))))
+  (unless envelope-content
+    (progn
+      (setq envelope-content
+	    (read-from-minibuffer "Send a mail to: "))
+      (if (not (null envelope-content))
+	  (setq mi-message-header-to envelope-content)
+	(setq mi-message-header-to nil))))
 
-  (if (null subject-content)
-      (progn
-	(setq subject-content
-	      (read-from-minibuffer "Subject: "))
-	(if (not (null subject-content))
+  (unless subject-content
+    (progn
+      (setq subject-content
+	    (read-from-minibuffer "Subject: "))
+      (if (not (null subject-content))
+	  (if (= (string-width subject-content)
+		 (length subject-content))
+	      (setq mi-message-header-subject
+		    subject-content)
 	    (setq mi-message-header-subject
-		  (concat "\"" subject-content "\""))
-	  (setq mi-message-header-subject nil))))
+		  (concat "\"" subject-content "\"")))
+	(setq mi-message-header-subject nil))))
 
-  (if (not (or cc-content newsgroup-content))
-      (progn
-	(setq cc-content
-	      (read-from-minibuffer "Cc: "))
-	(if (= 0 (string-width cc-content))
-	    (setq mi-message-header-cc nil)
-	  (setq mi-message-header-cc cc-content))))
+  (unless (or cc-content newsgroup-content)
+    (progn
+      (setq cc-content
+	    (read-from-minibuffer "Cc: "))
+      (if (or (= 0 (string-width cc-content))
+	      (string-match "^[ ]+$" cc-content))
+	  (setq mi-message-header-cc nil)
+	(setq mi-message-header-cc cc-content))))
 
   (if (string-equal "nnml:mail.sent.mail" gcc-content)
       (setq mi-message-header-bcc
@@ -118,29 +123,29 @@ Argument AUTH-FILE authentication file."
 
   (insert mi-message-header-envelope)
 
-  (if (not (null mi-message-header-bcc))
-      (insert mi-message-header-bcc))
+  (unless (null mi-message-header-bcc)
+    (insert mi-message-header-bcc))
 
-  (if (not (null mi-message-header-to))
-      (progn
-	(goto-char (point-min))
-	(while (search-forward-regexp "^To: $" (point-max) t)
-	  (replace-match (concat "To: " mi-message-header-to)))))
+  (unless (null mi-message-header-to)
+    (progn
+      (goto-char (point-min))
+      (while (search-forward-regexp "^To: $" (point-max) t)
+	(replace-match (concat "To: " mi-message-header-to)))))
 
-  (if (not (null mi-message-header-subject))
-      (progn
-	(goto-char (point-min))
-	(while (search-forward-regexp "^Subject: $" (point-max) t)
-	  (replace-match (concat "Subject: " mi-message-header-subject)))))
+  (unless (null mi-message-header-subject)
+    (progn
+      (goto-char (point-min))
+      (while (search-forward-regexp "^Subject: $" (point-max) t)
+	(replace-match (concat "Subject: " mi-message-header-subject)))))
 
-  (if (not (null mi-message-header-cc))
-      (progn
-	(if (or (null (gnus-fetch-field "Cc"))
-		(eq "" (gnus-fetch-field "Cc")))
-		(progn
-		  (insert (concat "\nCc: " mi-message-header-cc))
-		  (goto-char (point-min))
-		  (delete-blank-lines)))))
+  (unless (null mi-message-header-cc)
+    (progn
+      (if (or (null (gnus-fetch-field "Cc"))
+	      (eq "" (gnus-fetch-field "Cc")))
+	  (progn
+	    (insert (concat "\nCc: " mi-message-header-cc))
+	    (goto-char (point-min))
+	    (delete-blank-lines)))))
 
   (setq
    mi-message-header-envelope nil
