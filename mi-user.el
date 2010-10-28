@@ -11,7 +11,7 @@
   :type 'string
   :group 'mi-user)
 
-(defcustom mi-message-user-mail-address "tamgya@gmail.com"
+(defcustom mi-message-user-mail-address nil
   "User's default mail address."
   :type 'string
   :group 'mi-user)
@@ -20,6 +20,13 @@
   "User's nickname, which defaults to user's login name."
   :type 'string
   :group 'mi-user)
+
+(if (string-match "^pluton.xbsd.name$"
+		  (shell-command-to-string "echo -n `uname -n`"))
+    (setq mi-message-user-mail-address
+	  "darcsis@gmail.com")
+  (setq mi-message-user-mail-address
+	"tamgya@gmail.com"))
 
 (provide 'mi-user)
 
