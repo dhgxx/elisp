@@ -11,7 +11,7 @@
   :type 'string
   :group 'mi-user)
 
-(defcustom mi-message-user-mail-address "darcsis@gmail.com"
+(defcustom mi-message-user-mail-address "tamgya@gmail.com"
   "User's default mail address."
   :type 'string
   :group 'mi-user)

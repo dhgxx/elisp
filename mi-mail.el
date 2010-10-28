@@ -8,9 +8,27 @@
 
 (require 'smtpmail)
 
+(defvar mi-mail-smtp-server nil
+  "Default SMTP server name.")
+(defvar mi-mail-smtp-port nil
+  "Default SMTP server port.")
+(defvar mi-mail-smtp-user-name nil
+  "Default SMTP login user name.")
+
 ;; my own mail user agent message
 (setq gnus-user-agent '(emacs gnus type codename))
 (setq mail-user-agent 'gnus-user-agent)
+
+;; custom smtp server
+(eval-after-load "mi-user"
+  '(if (string-match "^pluton.xbsd.name$"
+		     (shell-command-to-string "echo -n `uname -n`"))
+       (setq mi-mail-smtp-server "smtp.xbsd.name"
+	     mi-mail-smtp-port 25
+	     mi-mail-smtp-user-name user-login-name)
+     (setq mi-mail-smtp-server "smtp.gmail.com"
+	   mi-mail-smtp-port 587
+	   mi-mail-smtp-user-name mi-message-user-mail-address)))
 
 ;; common smtp configuration
 (setq send-mail-function 'smtpmail-send-it
@@ -34,7 +52,7 @@ Argument KEY key.
 Argument CERT certificate.
 Argument AUTH-FILE authentication file."
   (setq smtpmail-smtp-server server
-	smtpmail-default-smtp-server "smtp.xbsd.name"
+	smtpmail-default-smtp-server mi-mail-smtp-server
 	smtpmail-smtp-service port
 	starttls-gnutls-program "gnutls-cli"
 	starttls-extra-arguments nil
@@ -50,9 +68,9 @@ Argument AUTH-FILE authentication file."
   "Send mail directly to smtp service provided by OpenSMTPD."
   (save-excursion
     (mi-message-smtpmail-tls
-     "smtp.xbsd.name"
-     25
-     "dhg"
+     mi-mail-smtp-server
+     mi-mail-smtp-port
+     mi-mail-smtp-user-name
      nil
      nil
      nil
