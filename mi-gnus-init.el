@@ -481,7 +481,7 @@
 	("mail.freebsd.bug-followup"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*bugs-followup@freebsd\\.org.*")
 	("mail.freebsd.stable"
-	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*freebsd-stable@freebsd\\.org.*")
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*\\(freebsd-\\)*stable@freebsd\\.org.*")
 	("mail.freebsd.hackers"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*hacker.*@freebsd\\.org.*")
 	("mail.freebsd.current"
