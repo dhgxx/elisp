@@ -63,7 +63,7 @@
       (end-of-line)
       (setq mi-pr-key-input
 	    (read-key-sequence nil))
-      (while (not (equal " " mi-pr-key-input))
+      (while (not (string-equal " " mi-pr-key-input))
 	(setq mi-pr-key-input (read-key-sequence nil)))
       (delete-char (- 0 (+ 2 (string-width mi-pr-reserve-word)))))))
 

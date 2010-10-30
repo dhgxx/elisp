@@ -13,6 +13,20 @@
       nndraft-directory (concat gnus-home-directory "/messages/drafts")
       mail-source-directory message-directory)
 
+;; misc
+(setq gnus-save-newsrc-file nil
+      gnus-read-newsrc-file nil)
+
+;; defaults to using only utf-8
+(setq gnus-default-charset 'utf-8)
+
+;; confirm sending mail to newsgroups
+(setq gnus-confirm-mail-reply-to-news t)
+
+;; local posting time
+(add-hook 'gnus-article-prepare-hook
+	  'gnus-article-date-local)
+
 ;; gnus select method
 (setq gnus-select-method '(nntp "news.cn99.com")
       gnus-auto-expirable-newsgroups "mail\\.freebsd\\..*\\|mail.freedesktop\\..*\\|mail.opensolaris\\..*\\|mail\\.openbsd\\..*\\|mail\\.x11\\..*\\|mail\\.news.*")
@@ -24,14 +38,7 @@
 			 (nnfolder-newsgroups-file "~/emacs/gnus/archive/newsgroups")
 			 (nnfolder-get-new-mail nil)))))
 
-;; misc
-(setq gnus-save-newsrc-file nil
-      gnus-read-newsrc-file nil)
-
 ;; gnus default
-;; defaults to using only utf-8
-(setq gnus-default-charset 'utf-8)
-
 (eval-after-load "gnus-group"
   '(setq gnus-group-name-charset-group-alist
 	 (nconc '(("^tw\\..*" . chinese-big5)
@@ -94,11 +101,10 @@
 	(not gnus-thread-sort-by-number)))
 
 ;; frame resizing
-(gnus-add-configuration
- '(article
-   (vertical 1.0
-	     (summary .45 point)
-	     (article 1.0))))
+(gnus-add-configuration '(article
+			  (vertical 1.0
+				    (summary .45 point)
+				    (article 1.0))))
 
 ;; view html
 (eval-after-load "mm-decode"
@@ -171,18 +177,14 @@
   :type 'string
   :group 'mi-gnus)
 
-;; confirm sending mail to newsgroups
-(setq gnus-confirm-mail-reply-to-news t)
-
 ;; auto fill long lines
 (add-hook 'message-mode-hook
-          (lambda ()
-	    (setq fill-column 72)
-            (turn-on-auto-fill)))
+          '(lambda ()
+	     (setq fill-column 72)
+	     (turn-on-auto-fill)))
 
 ;; auto article washing
 (setq mm-text-html-renderer 'lynx)
-
 ;; generate all headers
 (setq message-generate-headers-first t)
 
@@ -192,10 +194,6 @@
   (if (yes-or-no-p "Really send message? ")
       ad-do-it))
 (ad-activate 'message-send)
-
-;; local posting time
-(add-hook 'gnus-article-prepare-hook
-	  'gnus-article-date-local)
 
 ;; MFT things
 (setq message-subscribed-regexps
@@ -370,11 +368,12 @@
 
 ;; citation funcion
 ;; blank lines should be cited, too
-(setq sc-cite-blank-lines-p t)
-;; nesting citation
-(setq sc-nested-citation-p t)
-;; don't fill citation
-(setq sc-auto-fill-region-p nil)
+(setq sc-cite-blank-lines-p t
+      ;; nesting citation
+      sc-nested-citation-p t
+      ;; don't fill citation
+      sc-auto-fill-region-p nil)
+
 (add-hook 'sc-pre-hook
 	  'mi-message-citation-style)
 (add-hook 'sc-post-hook
@@ -514,7 +513,6 @@
 
 (global-set-key "\C-cg" nil)
 (global-set-key "\C-cgg" 'gnus)
-(global-set-key "\C-cgf"
-		'(lambda ()
-		   (interactive)
-		   (gnus-group-select-group mi-gnus-default-article-number)))
+(global-set-key "\C-cgf" '(lambda ()
+			    (interactive)
+			    (gnus-group-select-group mi-gnus-default-article-number)))

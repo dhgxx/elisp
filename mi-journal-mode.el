@@ -96,28 +96,26 @@
   (interactive)
   (set-buffer (current-buffer))
   ;;(setq i (line-number-at-pos (point-min))
-  (setq i 0
-	j (line-number-at-pos (point-max)))
-  (progn
-    (goto-char (point-min))
-    (forward-line (1- i)))
-  (while (< i j)
-    (beginning-of-line)
-    (setq line-begin (point))
-    (end-of-line)
-    (setq line-end (point)
-	  mi-string (buffer-substring line-begin line-end)
-	  mi-string-new (replace-regexp-in-string
-			 "\\(.+\\)\\(Date:.*[-]*[0-9][0-9][-]*\\)\\(.+\\)\\'"
-			 " \\1\n\n\\2\n\n\\3 " mi-string))
-    (if (not (equal mi-string mi-string-new))
-	(progn
-	  (delete-char (- 0 (string-width mi-string)))
-	  (insert mi-string-new)
-	  (setq mi-string nil
-		mi-string-new nil)))
-    (forward-line 1)
-    (setq i (+ 1 i))))
+  (let ((i 0)
+	(j (line-number-at-pos (point-max))))
+    (progn
+      (goto-char (point-min))
+      (forward-line (1- i)))
+    (while (< i j)
+      (beginning-of-line)
+      (let ((line-begin (point)))
+	(end-of-line)
+	(let ((line-end (point)))
+	  (let ((mi-string (buffer-substring line-begin line-end))
+		(mi-string-new (replace-regexp-in-string
+				"\\(.+\\)\\(Date:.*[-]*[0-9][0-9][-]*\\)\\(.+\\)\\'"
+				" \\1\n\n\\2\n\n\\3 " (buffer-substring line-begin line-end))))
+	    (if (not (string-equal mi-string mi-string-new))
+		(progn
+		  (delete-char (- 0 (string-width mi-string)))
+		  (insert mi-string-new))))))
+      (forward-line 1)
+      (setq i (+ 1 i)))))
 
 (defun mi-journal-save-journal ()
   "Save current journal."
@@ -152,56 +150,55 @@
 (defun mi-journal-jump-to-previous ()
   "Jump to previous journal entry."
   (interactive)
-  (setq current-point(point))
-  (forward-line -2)
-  (unhighlight-regexp (match-string 0))
-  (if (null (re-search-backward "Date:.*"
-				nil
-				t
-				1))
+  (let ((current-point (point)))
+    (forward-line -2)
+    (unhighlight-regexp (match-string 0))
+    (if (null (re-search-backward "Date:.*"
+				  nil
+				  t
+				  1))
+	(progn
+	  (goto-char current-point)
+	  (message "No more entries."))
       (progn
-	(goto-char current-point)
-	(message "No more entries."))
-    (progn
-      (forward-line 1)
-      (highlight-regexp (match-string 0)))))
+	(forward-line 1)
+	(highlight-regexp (match-string 0))))))
 
 (defun mi-journal-jump-to-next ()
   "Jump to next journal entry."
   (interactive)
-  (setq current-point (point))
-  (unhighlight-regexp (match-string 0))
-  (if (null (re-search-forward "Date:.*"
-			       nil
-			       t
-			       1))
+  (let ((current-point (point)))
+    (unhighlight-regexp (match-string 0))
+    (if (null (re-search-forward "Date:.*"
+				 nil
+				 t
+				 1))
+	(progn
+	  (goto-char current-point)
+	  (message "No more entries"))
       (progn
-	(goto-char current-point)
-	(message "No more entries"))
-    (progn
-      (forward-line 1)
-      (highlight-regexp (match-string 0)))))
+	(forward-line 1)
+	(highlight-regexp (match-string 0))))))
 
 (defun mi-journal-jump-to-specific ()
   "Jump to a specific day."
   (interactive)
-  (setq day
-	(read-from-minibuffer "Which day to go to? "))
-  (if (>= 1 (string-width day))
-      (setq day
-	    (concat "0" day)))
-  (setq current-point (point))
-  (setq target-day
-	(concat mi-journal-date-month "-" day))
-  (unhighlight-regexp (match-string 0))
-  (goto-char (point-min))
-  (if (null (re-search-forward (concat "Date:[ ].*"target-day ".*")
-			       nil
-			       t))
-      (message "No journal entry on %s" target-day)
-    (progn
-      (forward-line 1)
-      (highlight-regexp (match-string 0)))))
+  (let ((day (read-from-minibuffer "Which day to go to? ")))
+    (if (>= 1 (string-width day))
+	(setq day
+	      (concat "0" day)))
+    (let ((current-point (point)))
+      (setq target-day
+	    (concat mi-journal-date-month "-" day))
+      (unhighlight-regexp (match-string 0))
+      (goto-char (point-min))
+      (if (null (re-search-forward (concat "Date:[ ].*"target-day ".*")
+				   nil
+				   t))
+	  (message "No journal entry on %s" target-day)
+	(progn
+	  (forward-line 1)
+	  (highlight-regexp (match-string 0)))))))
 
 (defun mi-journal-toggle-read-only (&optional val)
   "Toggle buffer read only or not.
