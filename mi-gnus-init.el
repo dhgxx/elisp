@@ -473,7 +473,7 @@
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*hacker.*@freebsd\\.org.*")
 	("mail.freebsd.current"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*current.*@freebsd\\.org.*")
-	("mail.freedekstop.xorg"
+	("mail.freedesktop.xorg"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*xorg@\\(\\(lists\\.freedesktop\\)\\|\\(freedesktop\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
 	("mail.opensolaris.amd64"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*amd-platform-.*@opensolaris\\.org.*")
