@@ -14,7 +14,7 @@
   (interactive)
   (set-buffer (current-buffer))
   (goto-char (point-min))
-  (when (re-search-forward "\\(\\([$]time-stamp[$]\\)\\|\\(\$LastUpdated:.*\$\\)\\)" (point-max) t 1)
+  (when (re-search-forward "\\(\\([$]time-stamp[$]\\)\\|\\([$]LastUpdated:.*[$]\\)\\)" (point-max) t 1)
     (replace-match (concat "$LastUpdated: "
 			   (format-time-string "%Y/%m/%d %T ")
 			   (user-login-name)
@@ -27,7 +27,7 @@
   (setq mi-time-stamp-filename
 	(file-name-nondirectory (buffer-file-name)))
   (goto-char (point-min))
-  (when (re-search-forward "\\(\\([$]time-stamp[$]\\)\\|\\(\$xbsd:.*\$\\)\\)" (point-max) t 1)
+  (when (re-search-forward "\\(\\([$]time-stamp[$]\\)\\|\\([$]xbsd:.*[$]\\)\\|\\([$]LastUpdated:.*[$]\\)\\)" (point-max) t 1)
     (replace-match (concat "$xbsd: "
 			   mi-time-stamp-filename
 			   ", "

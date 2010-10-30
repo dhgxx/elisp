@@ -495,7 +495,7 @@
 	("mail.opensolaris.sysadmin"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*sysadmin-.*@opensolaris\\.org.*")
 	("mail.newsletters"
-	 "^From:\\(\\(.*\\)\\|\\(.*no-reply.*\\)\\)@.*\\(\\(noreply\\)\\|\\(mail\\.communications\\.sun\\)\\|\\(communications2\\)\\|\\(geocaching\\)\\|\\(apple\\)\\|\\(economist\\)\\|\\(freesoftwaremagazine\\)\\|\\(nytimes\\)\\|\\(phoronix\\)\\|\\(slashdot\\)\\|\\(osnews\\)\\|\\(yeeyan\\)\\|\\(ziki\\)\\|\\(sourceforge\\)\\|\\(myfonts\\)\\)\\.\\(\\(org\\)\\|\\(com\\)\\|\\(net\\)\\).*")
+	 "^From:\\(\\(.*\\)\\|\\(.*no-reply.*\\)\\)@.*\\(\\(noreply\\)\\|\\(mail\\.communications\\.sun\\)\\|\\(communications2\\)\\|\\(geocaching\\)\\|\\(apple\\)\\|\\(economist\\)\\|\\(freesoftwaremagazine\\)\\|\\(nytimes\\)\\|\\(phoronix\\)\\|\\(slashdot\\)\\|\\(osnews\\)\\|\\(yeeyan\\)\\|\\(ziki\\)\\|\\(sourceforge\\)\\|\\(myfonts\\)\\|\\(oracle-mail\\)\\)\\.\\(\\(org\\)\\|\\(com\\)\\|\\(net\\)\\).*")
 	("mail.x11.ati"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):\\(\\(.*xorg-driver-ati.*\\)\\|\\(.*\\)\\)@\\(\\(lists\\.x\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
 	("mail.x11.radeonhd"
