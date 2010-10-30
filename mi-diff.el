@@ -1,10 +1,11 @@
 ;; mi-diff.el
 
 ;; diff
-(setq
- diff-command "/usr/bin/diff"
- diff-switches "-anu"
- ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-custom-diff-progam "/usr/bin/diff"
+      ediff-custom-diff-options "-anu"
+      ediff-window-setup-function 'ediff-setup-windows-multiframe)
 
-(global-set-key "\C-cd" 'diff)
+(global-set-key "\C-ce" nil)
+(global-set-key "\C-ced" 'ediff)
+(global-set-key "\C-ceb" 'ediff-backup)
 
