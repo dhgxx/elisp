@@ -3,57 +3,56 @@
 (require 'supercite)
 
 ;; startup file
-(setq
- gnus-home-directory "~/emacs/gnus"
- gnus-default-directory gnus-home-directory
- gnus-startup-file (concat gnus-home-directory "/newsrc")
- gnus-article-save-directory (concat "/news/articles")
- gnus-kill-files-directory (concat gnus-home-directory "/news/articles")
- message-directory (concat gnus-home-directory "/messages")
- message-auto-save-directory (concat gnus-home-directory "/messages/autosave")
- nndraft-directory (concat gnus-home-directory "/messages/drafts")
- mail-source-directory message-directory)
+(setq gnus-home-directory "~/emacs/gnus"
+      gnus-default-directory gnus-home-directory
+      gnus-startup-file (concat gnus-home-directory "/newsrc")
+      gnus-article-save-directory (concat "/news/articles")
+      gnus-kill-files-directory (concat gnus-home-directory "/news/articles")
+      message-directory (concat gnus-home-directory "/messages")
+      message-auto-save-directory (concat gnus-home-directory "/messages/autosave")
+      nndraft-directory (concat gnus-home-directory "/messages/drafts")
+      mail-source-directory message-directory)
 
 ;; gnus select method
 (setq gnus-select-method '(nntp "news.cn99.com")
-      gnus-auto-expirable-newsgroups "mail\\.freebsd\\..*\\|mail.freedesktop\\..*\\|mail.opensolaris\\..*\\|mail\\.openbsd\\..*\\|mail\\.x11\\..*\\|mail\\.news.*"
-      gnus-secondary-select-methods
-      (eval-after-load "gnus"
-	'(nconc '((nnml "")
-		  (nnfolder "archive"
-			    (nnfolder-directory "~/emacs/gnus/archive/")
-			    (nnfolder-active-file "~/emacs/gnus/archive/ative")
-			    (nnfolder-newsgroups-file "~/emacs/gnus/archive/newsgroups")
-			    (nnfolder-get-new-mail nil))))))
+      gnus-auto-expirable-newsgroups "mail\\.freebsd\\..*\\|mail.freedesktop\\..*\\|mail.opensolaris\\..*\\|mail\\.openbsd\\..*\\|mail\\.x11\\..*\\|mail\\.news.*")
+(setq gnus-secondary-select-methods
+      (nconc '((nnml "")
+	       (nnfolder "archive"
+			 (nnfolder-directory "~/emacs/gnus/archive/")
+			 (nnfolder-active-file "~/emacs/gnus/archive/ative")
+			 (nnfolder-newsgroups-file "~/emacs/gnus/archive/newsgroups")
+			 (nnfolder-get-new-mail nil)))))
 
 ;; misc
-(setq
- gnus-save-newsrc-file nil
- gnus-read-newsrc-file nil)
+(setq gnus-save-newsrc-file nil
+      gnus-read-newsrc-file nil)
 
 ;; gnus default
 ;; defaults to using only utf-8
 (setq gnus-default-charset 'utf-8)
 
 (eval-after-load "gnus-group"
-  '(nconc '(("^tw\\..*" . chinese-big5)
-	    ("^cn\\..*" . chinese-iso-8bit))
-	  gnus-group-name-charset-group-alist))
+  '(setq gnus-group-name-charset-group-alist
+	 (nconc '(("^tw\\..*" . chinese-big5)
+		  ("^cn\\..*" . chinese-iso-8bit))
+		gnus-group-name-charset-group-alist)))
 
 (eval-after-load "gnus-sum"
   '(progn
      (setq gnus-newsgroup-ignored-charsets
 	   '(unknown-8bit x-unknown))
      (define-coding-system-alias 'x-gbk 'gbk)
-     (nconc '((1 . us-ascii)
-	      (2 . iso-8859-1)
-	      (3 . gb2312)
-	      (4 . gbk)
-	      (5 . gb18030)
-	      (6 . big5)
-	      (7 . big5-hkscs)
-	      (8 . utf-8))
-	    gnus-summary-show-article-charset-alist)
+     (setq gnus-summary-show-article-charset-alist
+	   (nconc '((1 . us-ascii)
+		    (2 . iso-8859-1)
+		    (3 . gb2312)
+		    (4 . gbk)
+		    (5 . gb18030)
+		    (6 . big5)
+		    (7 . big5-hkscs)
+		    (8 . utf-8))
+		  gnus-summary-show-article-charset-alist))
      (add-to-list 'gnus-newsgroup-variables
 		  'mm-coding-system-priorities)
      (setq gnus-parameters
@@ -103,11 +102,9 @@
 
 ;; view html
 (eval-after-load "mm-decode"
-  '(progn
-     (add-to-list 'mm-discouraged-alternatives
-		  "text/html")
-     (add-to-list 'mm-discouraged-alternatives
-		  "text/richtext")))
+  '(setq mm-discouraged-alternatives
+	 (nconc '("text/html" "text/richtext")
+		mm-discouraged-alternatives)))
 
 ;; topic mode
 (add-hook 'gnus-group-mode-hook
@@ -130,9 +127,7 @@
       ":%U%R %B %s %-70=|%3L|%-20,20n|%&user-date; \n")
 
 ;; process ansi colors
-(autoload 'ansi-color-apply-on-region
-  "ansi-color")
-
+;; `ansi-color-apply-on-region': in mi-ansi-color.el
 (add-hook 'gnus-part-display-hook
 	  '(lambda ()
 	     (save-excursion
@@ -151,13 +146,13 @@
 
 ;; encoding priorities
 (eval-after-load "mm-decode"
-  '(progn
-     (add-to-list 'mm-body-charset-encoding-alist
-		  '(gb2312 . 8bit))
-     (add-to-list 'mm-body-charset-encoding-alist
-		  '(big5 . 8bit))
-     (add-to-list 'mm-body-charset-encoding-alist
-		  '(utf-8 . base64) t)))
+  '(setq mm-body-charset-encoding-alist
+	 (nconc '((big5 . 8bit))
+		'((gb2312 . 8bit))
+		'((gbk . 8bit))
+		'((gb18030 . 8bit))
+		'((utf8 . base64))
+		mm-body-charset-encoding-alist)))
 
 ;; decide encoding according group names
 (defcustom mi-message-header-organization
@@ -344,7 +339,7 @@
     (while (search-forward-regexp "^\\([ ]*[>|:][ ]*\\)+\\([-][-]+\\|[_][_]+\\)[ ]*$" (point-max) t)
       (setq mi-message-signature-region-start
 	    (point))))
-
+  
   (if (not (= -1 mi-message-signature-region-start))
       (progn
 	(beginning-of-line)
@@ -356,7 +351,7 @@
     (while (search-backward-regexp "^[-][-]+[ ]*$" (point-min) t)
       (setq mi-message-signature-region-end
 	    (point)))
-  
+    
     (if (and (< 0 mi-message-signature-region-start)
 	     (< 0  mi-message-signature-region-end)
 	     (>= mi-message-signature-region-start (point-min))
@@ -389,18 +384,11 @@
 
 ;; mi-message-header-on-wrote now follows `sc-no-header' in
 ;; `sc-rewrite-header-list'.
-(setq mi-tmp-rewrite-header-list
-      (cdr sc-rewrite-header-list))
-(add-to-list 'mi-tmp-rewrite-header-list
-	     '(mi-message-header-on-wrote))
-(add-to-list 'mi-tmp-rewrite-header-list
-	     '(mi-message-header-on-wrote-cn))
-;; now the first one is `mi-message-header-on-wrote-cn'.
-(add-to-list 'mi-tmp-rewrite-header-list
-	     '(sc-no-header))
 (setq sc-rewrite-header-list
-      mi-tmp-rewrite-header-list)
-(setq mi-tmp-rewrite-header-list nil)
+      (nconc '((sc-no-header))
+	     '((mi-message-header-on-wrote-cn))
+	     '((mi-message-header-on-wrote))
+	     (cdr sc-rewrite-header-list)))
 
 ;; misc
 ;;

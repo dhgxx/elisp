@@ -10,9 +10,9 @@
 (define-generic-mode 'send-pr-mode
   ()
   '("To" "From" "Subject" "Reply-To" "Cc" "X-send-pr-version" "X-GNATS-Notify"
-	">Submitter-Id" ">Originator" ">Organization" ">Confidential" ">Synopsis"
-	">Severity" ">Priority" ">Category" ">Class" ">Release" ">Environment"
-	">Description" ">How-To-Repeat" ">Fix")
+    ">Submitter-Id" ">Originator" ">Organization" ">Confidential" ">Synopsis"
+    ">Severity" ">Priority" ">Category" ">Class" ">Release" ">Environment"
+    ">Description" ">How-To-Repeat" ">Fix")
   '(("\\(\\[.*\\]\\)" 1 'font-lock-comment-face))
   '("\\.[Pp][Rr]\\'")
   (list (lambda () (setq comment-start "[")))
@@ -27,22 +27,27 @@
 (defvar mi-pr-attachment-prettyname nil "Better file name handling.")
 (defvar mi-pr-filename-suffix ".pr" "Default filename suffix for a problem report.")
 (defvar mi-pr-key-input nil "Capture key input sequence while filling out a problem report.")
+
 (defcustom mi-pr-tmp-directory "/var/tmp"
   "Default send-pr tmp directory. e.g. '/var/tmp'"
   :type 'string
   :group 'mi-send-pr)
+
 (defcustom mi-pr-template-path "~/emacs/template/pr.template"
   "Absolute file path to PR Template. e.g. '~/emacs/template/pr.template'"
   :type 'string
   :group 'mi-send-pr)
+
 (defcustom mi-pr-subject-string "Problem report"
   "Fail safe subject for problem report."
   :type 'string
   :group 'mi-send-pr)
+
 (defcustom mi-pr-default-to-address "freebsd-gnats-submit@freebsd.org"
   "Default gnats server address."
   :type 'string
   :group 'mi-send-pr)
+
 (defcustom mi-pr-organization-name "XBSD Networks"
   "Default organization name for mi-send-pr."
   :type 'string
@@ -51,25 +56,25 @@
 (defun mi-pr-fill-out-pr ()
   "Fill out a problem report."
   (interactive)
-  (if (not (null mi-pr-fill-list))
-      (progn
-	(goto-char (point-min))
-	(forward-line (- (pop mi-pr-fill-list) 1))
-	(end-of-line)
-	(setq mi-pr-key-input
-	      (read-key-sequence nil))
-	(while (not (equal " " mi-pr-key-input))
-	  (setq mi-pr-key-input (read-key-sequence nil)))
-	(delete-char (- 0 (+ 2 (string-width mi-pr-reserve-word)))))))
+  (unless (null mi-pr-fill-list)
+    (progn
+      (goto-char (point-min))
+      (forward-line (- (pop mi-pr-fill-list) 1))
+      (end-of-line)
+      (setq mi-pr-key-input
+	    (read-key-sequence nil))
+      (while (not (equal " " mi-pr-key-input))
+	(setq mi-pr-key-input (read-key-sequence nil)))
+      (delete-char (- 0 (+ 2 (string-width mi-pr-reserve-word)))))))
 
 (defun mi-pr-post-fill ()
   "Post fill any unfilled items."
   (interactive)
   (goto-char (point-min))
   (while (search-forward-regexp "^>Synopsis:[ ]+.*$" (point-max) t))
-  (if (not (null (match-string 0)))
-      (setq mi-pr-subject-string
-	    (replace-regexp-in-string "^>Synopsis:[ ]+[\t]+" "" (match-string 0))))
+  (unless (null (match-string 0))
+    (setq mi-pr-subject-string
+	  (replace-regexp-in-string "^>Synopsis:[ ]+[\t]+" "" (match-string 0))))
   (goto-char (point-min))
   (insert (concat "Subject: " mi-pr-subject-string "\n")))
 
