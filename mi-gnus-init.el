@@ -399,22 +399,18 @@
   "Rewrite mail header subject, include it with double quotation markers."
   (setq mi-message-header-subject
 	(gnus-fetch-field "Subject"))
-  (if (and (not (null mi-message-header-subject))
-	   (not (eq (string-bytes mi-message-header-subject)
-		    (length mi-message-header-subject))))
+  (if (and mi-message-header-subject
+	   (not (= (string-bytes mi-message-header-subject)
+		   (length mi-message-header-subject))))
       (progn
 	(setq mi-message-header-subject
-	      (replace-regexp-in-string "\\\\" "" mi-message-header-subject nil nil)
-	      mi-message-header-subject
-	      (replace-regexp-in-string "^[ ]*[\"]" "" mi-message-header-subject nil nil)
-	      mi-message-header-subject
-	      (replace-regexp-in-string "[\"][ ]*$" "" mi-message-header-subject nil nil)
-	      mi-message-header-subject
-	      (replace-regexp-in-string "[\"]" "'" mi-message-header-subject nil nil)
-	      mi-message-header-subject
-	      (concat "Subject: \""
-		      mi-message-header-subject
-		      "\""))
+	      (replace-regexp-in-string "\\(\\\\\\|\"\\|^[ \t]+\\|[ \t]+$\\)"
+					""
+					mi-message-header-subject nil nil))
+	(setq  mi-message-header-subject
+	       (concat "Subject: \""
+		       mi-message-header-subject
+		       "\""))
 	(goto-char (point-min))
 	(while (search-forward-regexp "Subject: .*$" (point-max) t)
 	  (replace-match mi-message-header-subject nil nil))
