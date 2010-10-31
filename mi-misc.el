@@ -74,7 +74,7 @@
   (while current-keyword
     (goto-char (point-min))
     (while (search-forward-regexp (concat "\\(" current-keyword "\\)[ ]"
-					  "\\(\\w+[-]*\\)+") (point-max) t)
+					  "\\(\\(\\w?[-]?\\)+\\)") (point-max) t)
       (replace-match "<span style=\"color:#3bb9ff\">\\1</span>&nbsp;<span style=\"color:#eac117\">\\2</span>"))
     (setq tmp-html-elisp-defs-list (cdr tmp-html-elisp-defs-list)
 	  current-keyword (car tmp-html-elisp-defs-list)))
@@ -85,7 +85,7 @@
   (while current-keyword
     (goto-char (point-min))
     (while (search-forward-regexp (concat "\\(" current-keyword "\\)[ ]"
-					  "\\(\\w+[-]*\\)+") (point-max) t)
+					  "\\(\\(\\w?[-]?\\)+\\)") (point-max) t)
       (replace-match "<span style=\"color:#3bb9ff\">\\1</span>&nbsp;<span style=\"color:#2b60de\">\\2</span>"))
     (setq tmp-html-elisp-defuns-list (cdr tmp-html-elisp-defuns-list)
 	  current-keyword (car tmp-html-elisp-defuns-list)))
