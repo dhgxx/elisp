@@ -47,11 +47,11 @@
   "Elisp defs list.")
 
 (defvar mi-html-elisp-defuns-list
-  '("defun")
+  '("defun" "defalias")
   "Elisp defuns list.")
 
 (defvar mi-html-elisp-keywords-list
-  '("if" "when" "while" "progn")
+  '("eval-after-load" "if" "lambda" "let" "progn" "save-excursion" "when" "while")
   "Elisp keywords.")
 
 (defun mi-html-make-code-elisp ()
