@@ -468,7 +468,7 @@
 	("mail.freebsd.hackers"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*hacker.*@freebsd\\.org.*")
 	("mail.freebsd.current"
-	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*current.*@freebsd\\.org.*")
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*current@freebsd\\.org.*")
 	("mail.freedesktop.xorg"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*xorg@\\(\\(lists\\.freedesktop\\)\\|\\(freedesktop\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
 	("mail.opensolaris.amd64"
