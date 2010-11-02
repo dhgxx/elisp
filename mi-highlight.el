@@ -15,43 +15,6 @@
 ;; a temporary list to hold search results.
 (defvar mi-html-elisp-tmp-list nil)
 
-;; custom variables
-(defcustom mi-html-color-elisp-single-quoted
-  "#4cc417"
-  "HTML color code for `single' quoted string in Elisp."
-  :type 'string
-  :group 'mi-highlight)
-
-(defcustom mi-html-color-elisp-double-quoted
-  "#e66c2c"
-  "HTML color code for double quoted string in Elisp."
-  :type 'string
-  :group 'mi-highlight)
-
-(defcustom mi-html-color-elisp-comments
-  "#ab2300"
-  "HTML color code for comments in Elisp."
-  :type 'string
-  :group 'mi-highlight)
-
-(defcustom mi-html-color-elisp-defs
-  "#3bb9ff"
-  "HTML color code for def* in Elisp."
-  :type 'string
-  :group 'mi-highlight)
-
-(defcustom mi-html-color-elisp-vars
-  "#eac117"
-  "HTML color code for variables in Elisp."
-  :type 'string
-  :group 'mi-highlight)
-
-(defcustom mi-html-color-elisp-funcname
-  "#2b60de"
-  "HTML color code for function names in Elisp."
-  :type 'string
-  :group 'mi-highlight)
-
 ;; functions
 (defun mi-html-make-code-elisp ()
   "Make Elisp code listing for HTML."
@@ -77,8 +40,8 @@
       ;; match single quoted string
       (progn
 	(goto-char (point-min))
-	(while (search-forward-regexp "\\([ ]`\\)\\(.*\\)\\('[ ]\\)" (point-max) t)
-	  (replace-match "\\1<span style=\"color:#4cc417\">\\2</span>\\3")))
+	(while (search-forward-regexp "`\\(\\b\\(\\w?+-?\\)+\\b\\)'" (point-max) t)
+	  (replace-match "`<span style=\"color:#4cc417\">\\1</span>'")))
 
       ;; match comments
       (progn
