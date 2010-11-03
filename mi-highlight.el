@@ -24,7 +24,7 @@
 
     ;; make a new buffer for highlighting
     (let ((tmp-buffer (create-file-buffer (concat (buffer-name (current-buffer))
-						 " *Highlighted*"))))
+						  " *Highlighted*"))))
       (copy-to-buffer tmp-buffer (point-min) (point-max))
       (set-buffer tmp-buffer)
       (make-frame '((width . 80) (height . 40)))
@@ -55,7 +55,7 @@
 	(while (search-forward-regexp "\\(^[ ]*\\)\\(:\\w+\\)" (point-max) t)
 	  (replace-match "\\1<span style=\"color:#9172ec\">\\2</span>")))
 
-            ;; match `def*' in elisp code
+      ;; match `def*' in elisp code
       (progn
 	(setq tmp-html-elisp-defvars-list mi-html-elisp-defvars-list
 	      current-keyword (car tmp-html-elisp-defvars-list))
@@ -66,7 +66,7 @@
 	    (replace-match "<span style=\"color:#3bb9ff\">\\1</span>&nbsp;<span style=\"color:#eac117\">\\2</span>"))
 	  (setq tmp-html-elisp-defvars-list (cdr tmp-html-elisp-defvars-list)
 		current-keyword (car tmp-html-elisp-defvars-list))))
-
+      
       ;; match `defun' in elisp code
       (progn
 	(setq tmp-html-elisp-defuns-list mi-html-elisp-defuns-list
