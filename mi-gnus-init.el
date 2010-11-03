@@ -31,7 +31,8 @@
 (setq gnus-select-method '(nntp "news.cn99.com")
       gnus-auto-expirable-newsgroups "mail\\.freebsd\\..*\\|mail.freedesktop\\..*\\|mail.opensolaris\\..*\\|mail\\.openbsd\\..*\\|mail\\.x11\\..*\\|mail\\.news.*")
 (setq gnus-secondary-select-methods
-      (nconc '((nnml "")
+      (nconc '((nntp "news.yaako.com")
+	       (nnml "")
 	       (nnfolder "archive"
 			 (nnfolder-directory "~/emacs/gnus/archive/")
 			 (nnfolder-active-file "~/emacs/gnus/archive/ative")
