@@ -25,12 +25,15 @@
   (setq tmp-process-buffer-list mi-process-buffer-list
 	current-process (car tmp-process-buffer-list))
   (while current-process
-    (if (eq 'exit (process-status current-process))
-	(progn
-	  (bury-buffer (process-buffer current-process))
-	  (kill-buffer (process-buffer current-process))))
-    (setq tmp-process-buffer-list (cdr tmp-process-buffer-list)
-	  current-process (car tmp-process-buffer-list))))
+    (let ((status (process-status current-process)))
+      (if (or (eq 'exit status)
+	      (eq 'signal status)
+	      (eq 'nil status))
+	  (progn
+	    (bury-buffer (process-buffer current-process))
+	    (kill-buffer (process-buffer current-process))))
+      (setq tmp-process-buffer-list (cdr tmp-process-buffer-list)
+	    current-process (car tmp-process-buffer-list)))))
 
 (when mi-startup-first-time
   (run-with-timer 1 1 '(lambda ()
