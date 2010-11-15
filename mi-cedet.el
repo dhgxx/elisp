@@ -3,10 +3,11 @@
 (require 'cedet)
 (require 'semantic-ia)
 (require 'semantic-gcc)
- 
+
 ;; Enable EDE (Project Management) features
 (global-ede-mode 1)
  
+(setq semantic-load-turn-useful-things-on t)                     *
 (semantic-load-enable-excessive-code-helpers)
 (semantic-load-enable-semantic-debugging-helpers)
  
