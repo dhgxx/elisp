@@ -51,4 +51,6 @@
 (global-set-key "\C-cc" 'emacs-lisp-byte-compile)
 (global-set-key "\C-cl" 'emacs-lisp-byte-compile-and-load)
 
+(global-set-key "\C-ck" 'copy-region-as-kill)
+
 ;;; mi-misc.el ends here
