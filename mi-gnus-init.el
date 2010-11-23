@@ -469,6 +469,22 @@
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*hacker.*@freebsd\\.org.*")
 	("mail.freebsd.current"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*current@freebsd\\.org.*")
+	("mail.freebsd.geom"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*geom@freebsd\\.org.*")
+	("mail.freebsd.mono"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*mono@freebsd\\.org.*")
+	("mail.freebsd.net"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*net@freebsd\\.org.*")
+	("mail.freebsd.questions"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*questions@freebsd\\.org.*")
+	("mail.freebsd.smp"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*smp@freebsd\\.org.*")
+	("mail.freebsd.threads"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*threads@freebsd\\.org.*")
+	("mail.freebsd.toolchain"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*toolchain@freebsd\\.org.*")
+	("mail.freebsd.usb"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*usb@freebsd\\.org.*")
 	("mail.freedesktop.xorg"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*xorg@\\(\\(lists\\.freedesktop\\)\\|\\(freedesktop\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
 	("mail.opensolaris.amd64"
