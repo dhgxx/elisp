@@ -19,9 +19,9 @@
 
 ;; emacs23 xft fonts
 (when mi-use-xwindow
-  (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-11"))
-  (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
-  (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))
+  (add-to-list 'default-frame-alist '(font . "Monaco-11"))
+  (set-fontset-font "fontset-default" 'ascii '("Monaco" . "unicode-bmp"))
+  (set-fontset-font "fontset-default" 'latin '("Monaco" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'cyrillic-iso8859-5 '("Monaco" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'chinese-gb2312 '("Droid Sans Fallback" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'chinese-gbk '("Droid Sans Fallback" . "unicode-bmp"))
