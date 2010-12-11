@@ -7,7 +7,7 @@
   "An ANSI term that exuctes /bin/csh"
   (interactive)
   (save-excursion
-    (ansi-term "/bin/csh" "ANSI-Term")))
+    (ansi-term "/bin/csh")))
 
 ;; anti idle
 (defun mi-ansi-anti-idle-start ()
