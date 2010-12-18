@@ -1,7 +1,7 @@
 ;; .emacs
 
 ;; first time startup
-(setq mi-startup-first-time t)
+(setq mi-startup-firsttime-run t)
 
 ;; load path
 (add-to-list 'load-path "~/emacs/local-lisp")
@@ -32,6 +32,6 @@
 (mapc 'load-file mi-startup-elc-files)
 
 ;; first time startup completed
-(setq mi-startup-first-time nil)
+(setq mi-startup-firsttime-run nil)
 
 ;; end of dot.emacs
