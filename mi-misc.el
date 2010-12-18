@@ -48,8 +48,9 @@
 
 (global-set-key "\C-cf" 'mi-fill-whole-buffer)
 
-(global-set-key "\C-cc" 'emacs-lisp-byte-compile)
-(global-set-key "\C-cl" 'emacs-lisp-byte-compile-and-load)
+(global-set-key "\C-cc" nil)
+(global-set-key "\C-ccc" 'emacs-lisp-byte-compile)
+(global-set-key "\C-ccl" 'emacs-lisp-byte-compile-and-load)
 
 (global-set-key "\C-ck" 'copy-region-as-kill)
 
