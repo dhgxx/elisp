@@ -430,7 +430,13 @@
       '(("mail.openbsd.misc"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*misc@\\(\\(cvs\\.openbsd\\)\\|\\(openbsd\\)\\).org.*")
 	("mail.openbsd.tech"
-	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*tech@openbsd\\.org.*")
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*tech@\\(\\(cvs\\.openbsd\\)\\|\\(openbsd\\)\\)\\.org.*")
+	("mail.openbsd.advocacy"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*advocacy@openbsd\\.org.*")
+	("mail.openbsd.bugs"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*\\(\\(bugs\\)\\|\\(gnats\\)\\)@\\(\\(cvs\\.openbsd\\)\\|\\(openbsd\\)\\)\\.org.*")
+	("mail.openbsd.source-changes"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*source-changes@\\(\\(cvs\\.openbsd\\)\\|\\(openbsd\\)\\)\\.org.*")
 	("mail.freebsd.security"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*\\(\\(freebsd-security\\)\\|\\(security-advisories\\)\\)@freebsd\\.org.*")
 	("mail.freebsd.bugs"
@@ -462,7 +468,7 @@
 	("mail.freebsd.ports-bugs"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*ports-bugs@freebsd\\.org.*")
 	("mail.freebsd.bug-followup"
-	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*bugs-followup@freebsd\\.org.*")
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*bug-followup@freebsd\\.org.*")
 	("mail.freebsd.stable"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*\\(freebsd-\\)*stable@freebsd\\.org.*")
 	("mail.freebsd.hackers"
@@ -527,4 +533,5 @@
 (global-set-key "\C-cgg" 'gnus)
 (global-set-key "\C-cgf" '(lambda ()
 			    (interactive)
-			    (gnus-group-select-group mi-gnus-default-article-number)))
+			    (let ((article-number mi-gnus-default-article-number))
+			      (gnus-group-select-group article-number))))
