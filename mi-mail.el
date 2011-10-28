@@ -21,18 +21,14 @@
 
 ;; custom smtp server
 (eval-after-load "mi-user"
-  '(if (string-match "^pluton.xbsd.name$"
-		     (shell-command-to-string "echo -n `uname -n`"))
-       (setq mi-mail-smtp-server "smtp.xbsd.name"
-	     mi-mail-smtp-port 25
-	     mi-mail-smtp-user-name user-login-name)
-     (setq mi-mail-smtp-server "smtp.gmail.com"
-	   mi-mail-smtp-port 587
-	   mi-mail-smtp-user-name mi-message-user-mail-address)))
+  '(setq mi-mail-smtp-server "smtp.gmail.com"
+	 mi-mail-smtp-port 587
+	 mi-mail-smtp-user-name mi-message-user-mail-address))
 
 ;; common smtp configuration
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
+      smtpmail-auth-credentials "~/.netrc"
       smtpmail-debug-info t
       smtpmail-debug-verb t)
 
@@ -42,22 +38,20 @@
 ;; pop3 configuration
 (setq mail-sources '((file :path "/var/mail/dhg")))
 
-(defun mi-message-smtpmail-tls (server port user passwd key cert auth-file)
+;; use tls so send mail
+(setq starttls-use-gnutls t
+      starttls-gnutls-program "gnutls-cli"
+      starttls-extra-arguments nil)
+
+(defun mi-message-smtpmail-tls (server port user)
   "Send mail using tls method.
 Argument SERVER server name or ip address.
 Argument PORT server port number.
-Argument USER user name.
-Argument PASSWD password.
-Argument KEY key.
-Argument CERT certificate.
-Argument AUTH-FILE authentication file."
+Argument USER user name."
   (setq smtpmail-smtp-server server
 	smtpmail-default-smtp-server mi-mail-smtp-server
 	smtpmail-smtp-service port
-	starttls-gnutls-program "gnutls-cli"
-	starttls-extra-arguments nil
-	smtpmail-auth-credentials auth-file
-	smtpmail-starttls-credentials (list (list server port user passwd key cert)))
+	smtpmail-starttls-credentials (list (list server port nil nil)))
   (message
    "Setting SMTP server to `%s:%s' for user `%s'."
    server port user))
@@ -70,11 +64,7 @@ Argument AUTH-FILE authentication file."
     (mi-message-smtpmail-tls
      mi-mail-smtp-server
      mi-mail-smtp-port
-     mi-mail-smtp-user-name
-     nil
-     nil
-     nil
-     "~/.authinfo")))
+     mi-mail-smtp-user-name)))
 
 ;; mail envelopes
 ;;

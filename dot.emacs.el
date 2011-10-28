@@ -11,6 +11,5 @@
 	 gnus-directory "~/emacs/gnus"))
 
 ;; override default key bindings for set-mark-command
-(global-set-key "\C-[space]" nil)
-(global-set-key "\M-sm" nil)
+(global-unset-key "\M-sm")
 (global-set-key "\M-sm" 'set-mark-command)
