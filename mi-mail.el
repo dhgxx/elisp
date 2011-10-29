@@ -19,52 +19,11 @@
 (setq gnus-user-agent '(emacs gnus type codename))
 (setq mail-user-agent 'gnus-user-agent)
 
-;; custom smtp server
-(eval-after-load "mi-user"
-  '(setq mi-mail-smtp-server "smtp.gmail.com"
-	 mi-mail-smtp-port 587
-	 mi-mail-smtp-user-name mi-message-user-mail-address))
-
-;; common smtp configuration
-(setq send-mail-function 'smtpmail-send-it
-      message-send-mail-function 'smtpmail-send-it
-      smtpmail-auth-credentials "~/.netrc"
-      smtpmail-debug-info t
-      smtpmail-debug-verb t)
-
 (eval-after-load "mi-user"
   '(setq user-mail-address mi-message-user-mail-address))
 
 ;; pop3 configuration
 (setq mail-sources '((file :path "/var/mail/dhg")))
-
-;; use tls so send mail
-(setq starttls-use-gnutls t
-      starttls-gnutls-program "gnutls-cli"
-      starttls-extra-arguments nil)
-
-(defun mi-message-smtpmail-tls (server port user)
-  "Send mail using tls method.
-Argument SERVER server name or ip address.
-Argument PORT server port number.
-Argument USER user name."
-  (setq smtpmail-smtp-server server
-	smtpmail-default-smtp-server mi-mail-smtp-server
-	smtpmail-smtp-service port
-	smtpmail-starttls-credentials (list (list server port nil nil)))
-  (message
-   "Setting SMTP server to `%s:%s' for user `%s'."
-   server port user))
-
-;; we have opensmtpd to deal different
-;; smtp severs.
-(defun mi-message-smtp-send ()
-  "Send mail directly to smtp service provided by OpenSMTPD."
-  (save-excursion
-    (mi-message-smtpmail-tls
-     mi-mail-smtp-server
-     mi-mail-smtp-port
-     mi-mail-smtp-user-name)))
 
 ;; mail envelopes
 ;;
@@ -158,10 +117,18 @@ Argument USER user name."
 	mi-message-header-cc nil
 	mi-message-header-bcc nil))
 
+
+;; with Emacs 23.1, you have to set this explicitly (in MS Windows)
+;; otherwise it tries to send through OS associated mail client
+(setq message-send-mail-function 'message-send-mail-with-sendmail)
+;; we substitute sendmail with msmtp
+(setq sendmail-program "/usr/local/bin/msmtp")
+;;need to tell msmtp which account we're using
+(setq message-sendmail-extra-arguments '("-a" "dhg"))
+
 ;; hooks
 (add-hook 'message-header-setup-hook
 	  'mi-message-header-setup-hook)
-(add-hook 'message-send-hook 'mi-message-smtp-send)
 
 (provide 'mi-mail)
 

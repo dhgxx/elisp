@@ -19,10 +19,10 @@
 
 ;; emacs23 xft fonts
 (when mi-use-xwindow
-  (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-10"))
-  (set-fontset-font "fontset-default" 'ascii '("Droid Sans Mono" . "unicode-bmp"))
-  (set-fontset-font "fontset-default" 'latin '("Droid Sans Mono" . "unicode-bmp"))
-  (set-fontset-font "fontset-default" 'cyrillic-iso8859-5 '("Droid Sans Mono" . "unicode-bmp"))
+  (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
+  (set-fontset-font "fontset-default" 'ascii '("DejaVu Sans Mono" . "unicode-bmp"))
+  (set-fontset-font "fontset-default" 'latin '("DejaVu Sans Mono" . "unicode-bmp"))
+  (set-fontset-font "fontset-default" 'cyrillic-iso8859-5 '("DejaVu Sans Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'chinese-gb2312 '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'chinese-gbk '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'gb18030 '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
@@ -31,7 +31,7 @@
   (set-fontset-font "fontset-default" 'chinese-cns11643-1 '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'chinese-cns11643-2 '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
   (set-fontset-font "fontset-default" 'unicode '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
-  (set-fontset-font "fontset-default" '(#x20ac . #x20ac) '("Droid Sans Mono" . "unicode-bmp"))
+  (set-fontset-font "fontset-default" '(#x20ac . #x20ac) '("DejaVu Sans Mono" . "unicode-bmp"))
   ;; chinese fill
   (put-charset-property 'chinese-cns11643-5 'nospace-between-words t)
   (put-charset-property 'chinese-cns11643-6 'nospace-between-words t)
