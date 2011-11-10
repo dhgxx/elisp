@@ -5,6 +5,11 @@
 
 ;;; Code:
 
+(defun mi-insert-time-date ()
+  "Insert date at point."
+  (interactive)
+  (insert (format-time-string "%a %Y-%m-%d - %H:%M")))
+
 (defvar mi-time-stamp-filename
   nil
   "File name to make time stamps.")
@@ -43,6 +48,7 @@
 	       (point-max)))
 
 (global-set-key "\C-ct" nil)
+(global-set-key "\C-ctd" 'mi-insert-time-date)
 (global-set-key "\C-ctt" 'mi-update-time-stamp)
 (global-set-key "\C-ctf" 'mi-update-time-stamp-for-file)
 

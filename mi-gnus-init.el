@@ -28,7 +28,7 @@
 	  'gnus-article-date-local)
 
 ;; gnus select method
-(setq gnus-select-method '(nntp "news.cn99.com")
+(setq gnus-select-method '(nntp "freenews.netfront.net")
       gnus-auto-expirable-newsgroups "mail\\.freebsd\\..*\\|mail.freedesktop\\..*\\|mail.opensolaris\\..*\\|mail\\.openbsd\\..*\\|mail\\.x11\\..*\\|mail\\.news.*")
 (setq gnus-secondary-select-methods
       (nconc '((nnml "")
@@ -491,6 +491,8 @@
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*toolchain@freebsd\\.org.*")
 	("mail.freebsd.usb"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*usb@freebsd\\.org.*")
+	("mail.freebsd.desktop"
+	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*freebsd-desktop@freebsd\\.org.*")
 	("mail.freedesktop.xorg"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*xorg@\\(\\(lists\\.freedesktop\\)\\|\\(freedesktop\\)\\|\\(bugs\\.debian\\)\\)\\.org.*")
 	("mail.opensolaris.amd64"
