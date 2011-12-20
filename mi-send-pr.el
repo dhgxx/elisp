@@ -84,8 +84,7 @@
   (save-buffer)
   (if (yes-or-no-p "Really send the problem report? ")
       (progn
-	(mi-message-smtp-send)
-	(smtpmail-send-it)
+	(message-send-mail-with-sendmail)
 	(bury-buffer mi-pr-working-buffer)
 	(kill-buffer mi-pr-working-buffer))
     (message "Message sending cancelled!")))

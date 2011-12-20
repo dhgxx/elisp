@@ -1,5 +1,6 @@
 ;; mi-gnus-init.el -- gnus configuration
 
+(require 'gnus)
 (require 'supercite)
 
 ;; startup file
@@ -45,54 +46,6 @@
 		  ("^cn\\..*" . chinese-iso-8bit))
 		gnus-group-name-charset-group-alist)))
 
-(eval-after-load "gnus-sum"
-  '(progn
-     (setq gnus-newsgroup-ignored-charsets
-	   '(unknown-8bit x-unknown))
-     (define-coding-system-alias 'x-gbk 'gbk)
-     (setq gnus-summary-show-article-charset-alist
-	   (nconc '((1 . us-ascii)
-		    (2 . iso-8859-1)
-		    (3 . gb2312)
-		    (4 . gbk)
-		    (5 . gb18030)
-		    (6 . big5)
-		    (7 . big5-hkscs)
-		    (8 . utf-8))
-		  gnus-summary-show-article-charset-alist))
-     (add-to-list 'gnus-newsgroup-variables
-		  'mm-coding-system-priorities)
-     (setq gnus-parameters
-	   (nconc '((".*"
-		     (posting-style
-		      (name mi-message-user-full-name)
-		      (address mi-message-user-mail-address)
-		      (signature-file mi-message-signature-file)
-		      (organization mi-message-header-organization))
-		     (mm-coding-system-priorities
-		      '(us-ascii iso-8859-1 gb2312 gbk gb18030 big5 big5-hkscs utf-8)))
-		    ("^tw\\..*"
-		     (charset . chinese-big5)
-		     (posting-style
-		      (name mi-message-user-full-name))
-		     (mm-coding-system-priorities
-		      '(us-ascii iso-8859-1 big5 big5-hkscs)))
-		    ("^cn\\..*"
-		     (charset . chinese-iso-8bit)
-		     (posting-style
-		      (name mi-message-user-full-name))
-		     (mm-coding-system-priorities
-		      '(us-ascii iso-8859-1 gb2312 gbk gb18030)))
-		    ("^mailing\\..*"
-		     (mm-coding-system-priorities
-		      '(us-ascii iso-8859-1 utf-8)))
-		    ("^nnml:.*"
-		     (visible . t)
-		     (mm-coding-system-priorities
-		      '(us-ascii iso-8859-1 utf-8)))
-		    ("^nndraft:.*"
-		     (visible . t)))		    
-		  gnus-parameters))))
 
 ;; visual appearance
 ;; summary buffer sorting
@@ -105,12 +58,33 @@
 			  (vertical 1.0
 				    (summary .45 point)
 				    (article 1.0))))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; view html
 (eval-after-load "mm-decode"
   '(setq mm-discouraged-alternatives
 	 (nconc '("text/html" "text/richtext")
 		mm-discouraged-alternatives)))
+
+;; topic mode
+(add-hook 'gnus-group-mode-hook
+	  'gnus-topic-mode)
+
+;; more headers
+(add-hook 'gnus-startup-hook
+          '(lambda ()
+             (setq gnus-visible-headers
+                   (concat "^From:\\|^User-Agent:\\|^Content-Type:\\|"
+                           "^Content-Transfer-Encoding:\\|"
+			   "^Message-ID:\\|"
+                           "^X-Mailer:\\|^X-Newsreader:\\|^Xref:\\|^X-Sender:\\|"
+                           gnus-visible-headers))))
+
+;; group buffer line format
+(setq gnus-group-line-format
+      "%M%S%p%P%5y:%B%(%g%)%l %O\n"
+      gnus-summary-line-format
+      ":%U%R %B %s %-70=|%3L|%-20,20n|%&user-date; \n")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; topic mode
 (add-hook 'gnus-group-mode-hook
@@ -149,6 +123,16 @@
        'rfc2047-encode-parameter)
      (add-to-list 'rfc2047-header-encoding-alist
 		  '("Subject"))))
+
+;; encoding priorities
+(eval-after-load "mm-decode"
+  '(setq mm-body-charset-encoding-alist
+	 (nconc '((big5 . 8bit))
+		'((gb2312 . 8bit))
+		'((gbk . 8bit))
+		'((gb18030 . 8bit))
+		'((utf8 . base64))
+		mm-body-charset-encoding-alist)))
 
 ;; encoding priorities
 (eval-after-load "mm-decode"
@@ -427,7 +411,9 @@
 
 ;; mail splitting
 (setq nnmail-split-methods
-      '(("mail.openbsd.misc"
+      '(("^mail.marcuscom-devel"
+	 "^\\(\\From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*marcuscom-devel.*@marcuscom\\.com.*")
+	("mail.openbsd.misc"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*misc@\\(\\(cvs\\.openbsd\\)\\|\\(openbsd\\)\\).org.*")
 	("mail.openbsd.tech"
 	 "^\\(\\(From\\)\\|\\(To\\)\\|\\(Cc\\)\\):.*tech@\\(\\(cvs\\.openbsd\\)\\|\\(openbsd\\)\\)\\.org.*")

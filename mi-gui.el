@@ -1,5 +1,9 @@
 ;; mi-gui.el
 
+;; use color for bg and fg under windows
+(set-foreground-color "#eeeeee")
+(set-background-color "#101010")
+
 ;; visual appearance
 (tool-bar-mode 0)
 
@@ -33,7 +37,11 @@
 
 ;; matching parentheses with colors
 (show-paren-mode t)
-(setq show-paren-style 'parentheses)
+;; show-paren-style takes threes arguments as follow:
+;; `parenthesis' - show matching paren.
+;; `expression' - show entire expression enclosed by the paren
+;; `mixed' - show matching paren if visible, and the expression otherwise.
+(setq show-paren-style 'parenthesis)
 
 ;; emacs frame title
 (setq frame-title-format "emacs@%b - [%f]")

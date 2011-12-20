@@ -7,7 +7,13 @@
   "An ANSI term that exuctes /bin/csh"
   (interactive)
   (save-excursion
-    (ansi-term "/bin/csh")))
+    (ansi-term "/bin/csh")
+    (let ((process (ignore-errors (get-buffer-process (current-buffer)))))
+      (when process
+	(set-process-sentinel process
+			      (lambda (proc change)
+				(when (string-match "\\(finished\\|exited\\|terminated\\)" change)
+				  (kill-buffer (process-buffer proc)))))))))
 
 ;; anti idle
 (defun mi-ansi-anti-idle-start ()
